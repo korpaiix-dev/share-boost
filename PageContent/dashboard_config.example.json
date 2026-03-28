@@ -1,0 +1,15 @@
+{
+  "captionStyle": "sexy",
+  "emergencyStop": false,
+  "pages": [
+    {
+      "id": "main",
+      "name": "ชื่อเพจหลัก",
+      "pageId": "YOUR_FACEBOOK_PAGE_ID",
+      "accessToken": "YOUR_FACEBOOK_ACCESS_TOKEN",
+      "captionStyle": "sexy",
+      "schedule": ["10:00"],
+      "keywords": "คำที่ต้องใส่ท้ายทุกแคปชั่น"
+    }
+  ]
+}

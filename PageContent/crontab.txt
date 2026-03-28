@@ -1,0 +1,2 @@
+00 09 * * * /usr/bin/python3 /Users/parminw1122/PageContent/post_facebook.py >> /Users/parminw1122/PageContent/cron.log 2>&1
+30 19 * * * /usr/bin/python3 /Users/parminw1122/PageContent/post_facebook.py >> /Users/parminw1122/PageContent/cron.log 2>&1
