@@ -1,0 +1,28 @@
+appId: com.postpilot.ai
+productName: PostPilot AI
+copyright: Copyright 2026
+
+directories:
+  output: dist
+
+files:
+  - "**/*"
+  - "!dist/**"
+  - "!.git/**"
+  - "!*.md"
+
+win:
+  target:
+    - target: nsis
+      arch: [x64]
+  icon: assets/icon.ico
+
+nsis:
+  oneClick: false
+  allowToChangeInstallationDirectory: true
+  createDesktopShortcut: true
+  createStartMenuShortcut: true
+  installerIcon: assets/icon.ico
+  uninstallerIcon: assets/icon.ico
+
+publish: null

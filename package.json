@@ -1,0 +1,19 @@
+{
+  "name": "postpilot-ai",
+  "version": "1.0.0",
+  "description": "Facebook Group Share Tool with AI Caption",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "build": "electron-builder"
+  },
+  "dependencies": {
+    "sql.js": "^1.11.0",
+    "playwright-core": "^1.49.0",
+    "uuid": "^10.0.0"
+  },
+  "devDependencies": {
+    "electron": "^33.0.0",
+    "electron-builder": "^25.1.8"
+  }
+}
