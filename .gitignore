@@ -1,0 +1,12 @@
+node_modules/
+dist/
+.first_run
+*.blockmap
+desktop.ini
+.DS_Store
+Thumbs.db
+*.exe
+*.dll
+*.dat
+*.bin
+*.pak

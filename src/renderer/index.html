@@ -1,0 +1,2251 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ShareBoost</title>
+  <style>
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@300;400;500;600;700&display=swap');
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: #0f1322;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #3b82f6;
+  border-radius: 3px;
+}
+
+body {
+  font-family: 'Noto Sans Thai', sans-serif;
+  background: #0f1322;
+  color: #e2e8f0;
+  overflow: hidden;
+  height: 100vh;
+}
+
+#root {
+  height: 100vh;
+}
+
+.app-container {
+  display: flex;
+  height: 100vh;
+}
+
+/* Sidebar */
+.sidebar {
+  width: 220px;
+  background: linear-gradient(180deg, #1a1f35 0%, #151929 100%);
+  border-right: 1px solid #2d3555;
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+}
+
+.sidebar-logo {
+  padding: 20px;
+  text-align: center;
+  border-bottom: 1px solid #2d3555;
+}
+
+.sidebar-logo h1 {
+  font-size: 22px;
+  font-weight: 700;
+  background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.sidebar-logo span {
+  font-size: 11px;
+  color: #64748b;
+}
+
+.sidebar-menu {
+  flex: 1;
+  padding: 12px 0;
+}
+
+.sidebar-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 20px;
+  cursor: pointer;
+  transition: all 0.2s;
+  color: #94a3b8;
+  font-size: 14px;
+  border-left: 3px solid transparent;
+}
+
+.sidebar-item:hover {
+  background: rgba(59, 130, 246, 0.1);
+  color: #e2e8f0;
+}
+
+.sidebar-item.active {
+  background: rgba(59, 130, 246, 0.15);
+  color: #3b82f6;
+  border-left-color: #3b82f6;
+}
+
+.sidebar-item .icon {
+  font-size: 18px;
+  width: 24px;
+  text-align: center;
+}
+
+/* Main Content */
+.main-content {
+  flex: 1;
+  overflow-y: auto;
+  padding: 24px;
+  background: #0f1322;
+}
+
+.page-title {
+  font-size: 24px;
+  font-weight: 700;
+  margin-bottom: 20px;
+  color: #f1f5f9;
+}
+
+/* Cards */
+.card {
+  background: #1a1f35;
+  border: 1px solid #2d3555;
+  border-radius: 12px;
+  padding: 20px;
+  margin-bottom: 16px;
+}
+
+.card-title {
+  font-size: 16px;
+  font-weight: 600;
+  margin-bottom: 12px;
+  color: #e2e8f0;
+}
+
+/* Form Elements */
+.form-group {
+  margin-bottom: 14px;
+}
+
+.form-label {
+  display: block;
+  font-size: 13px;
+  font-weight: 500;
+  color: #94a3b8;
+  margin-bottom: 6px;
+}
+
+.form-input,
+.form-select,
+.form-textarea {
+  width: 100%;
+  padding: 10px 14px;
+  background: #0f1322;
+  border: 1px solid #2d3555;
+  border-radius: 8px;
+  color: #e2e8f0;
+  font-family: 'Noto Sans Thai', sans-serif;
+  font-size: 14px;
+  transition: border-color 0.2s;
+}
+
+.form-input:focus,
+.form-select:focus,
+.form-textarea:focus {
+  outline: none;
+  border-color: #3b82f6;
+}
+
+.form-textarea {
+  resize: vertical;
+  min-height: 80px;
+}
+
+.form-select {
+  cursor: pointer;
+}
+
+/* Buttons */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 8px;
+  font-family: 'Noto Sans Thai', sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn:hover {
+  transform: translateY(-1px);
+}
+
+.btn:active {
+  transform: translateY(0);
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, #3b82f6, #2563eb);
+  color: white;
+}
+
+.btn-primary:hover {
+  background: linear-gradient(135deg, #60a5fa, #3b82f6);
+}
+
+.btn-success {
+  background: linear-gradient(135deg, #22c55e, #16a34a);
+  color: white;
+}
+
+.btn-danger {
+  background: linear-gradient(135deg, #ef4444, #dc2626);
+  color: white;
+}
+
+.btn-secondary {
+  background: #2d3555;
+  color: #e2e8f0;
+}
+
+.btn-secondary:hover {
+  background: #3d4565;
+}
+
+.btn-sm {
+  padding: 6px 12px;
+  font-size: 12px;
+}
+
+.btn-lg {
+  padding: 14px 28px;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* Toggle */
+.toggle {
+  position: relative;
+  width: 44px;
+  height: 24px;
+  background: #2d3555;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.toggle.active {
+  background: #3b82f6;
+}
+
+.toggle-knob {
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 20px;
+  height: 20px;
+  background: white;
+  border-radius: 50%;
+  transition: transform 0.2s;
+}
+
+.toggle.active .toggle-knob {
+  transform: translateX(20px);
+}
+
+/* Tabs */
+.tabs {
+  display: flex;
+  gap: 0;
+  border-bottom: 1px solid #2d3555;
+  margin-bottom: 16px;
+}
+
+.tab {
+  padding: 10px 20px;
+  cursor: pointer;
+  font-size: 14px;
+  color: #94a3b8;
+  border-bottom: 2px solid transparent;
+  transition: all 0.2s;
+}
+
+.tab:hover {
+  color: #e2e8f0;
+}
+
+.tab.active {
+  color: #3b82f6;
+  border-bottom-color: #3b82f6;
+}
+
+/* Table */
+.table-container {
+  overflow-x: auto;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th {
+  text-align: left;
+  padding: 12px 14px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #64748b;
+  text-transform: uppercase;
+  border-bottom: 1px solid #2d3555;
+}
+
+td {
+  padding: 10px 14px;
+  font-size: 13px;
+  border-bottom: 1px solid rgba(45, 53, 85, 0.5);
+}
+
+tr:hover {
+  background: rgba(59, 130, 246, 0.05);
+}
+
+/* Checkbox */
+.checkbox {
+  width: 18px;
+  height: 18px;
+  border: 2px solid #2d3555;
+  border-radius: 4px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+  flex-shrink: 0;
+}
+
+.checkbox.checked {
+  background: #3b82f6;
+  border-color: #3b82f6;
+}
+
+.checkbox.checked::after {
+  content: '✓';
+  color: white;
+  font-size: 12px;
+  font-weight: bold;
+}
+
+/* Badge */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 3px 10px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 500;
+}
+
+.badge-success { background: rgba(34, 197, 94, 0.15); color: #22c55e; }
+.badge-warning { background: rgba(234, 179, 8, 0.15); color: #eab308; }
+.badge-danger { background: rgba(239, 68, 68, 0.15); color: #ef4444; }
+.badge-info { background: rgba(59, 130, 246, 0.15); color: #3b82f6; }
+.badge-gray { background: rgba(148, 163, 184, 0.15); color: #94a3b8; }
+
+/* Progress Bar */
+.progress-container {
+  margin: 16px 0;
+}
+
+.progress-bar {
+  height: 8px;
+  background: #2d3555;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #3b82f6, #8b5cf6);
+  border-radius: 4px;
+  transition: width 0.5s ease;
+}
+
+.progress-text {
+  display: flex;
+  justify-content: space-between;
+  font-size: 12px;
+  color: #94a3b8;
+  margin-top: 6px;
+}
+
+/* Stats Cards */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.stat-card {
+  background: #1a1f35;
+  border: 1px solid #2d3555;
+  border-radius: 12px;
+  padding: 16px;
+  text-align: center;
+}
+
+.stat-value {
+  font-size: 28px;
+  font-weight: 700;
+  color: #f1f5f9;
+}
+
+.stat-label {
+  font-size: 12px;
+  color: #64748b;
+  margin-top: 4px;
+}
+
+/* Style selector buttons */
+.style-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+}
+
+.style-btn {
+  padding: 10px;
+  background: #0f1322;
+  border: 2px solid #2d3555;
+  border-radius: 8px;
+  color: #e2e8f0;
+  cursor: pointer;
+  text-align: center;
+  font-size: 13px;
+  transition: all 0.2s;
+  font-family: 'Noto Sans Thai', sans-serif;
+}
+
+.style-btn:hover {
+  border-color: #3b82f6;
+}
+
+.style-btn.selected {
+  border-color: #3b82f6;
+  background: rgba(59, 130, 246, 0.15);
+}
+
+/* Level selector */
+.level-group {
+  display: flex;
+  gap: 6px;
+}
+
+.level-btn {
+  flex: 1;
+  padding: 8px;
+  background: #0f1322;
+  border: 1px solid #2d3555;
+  border-radius: 6px;
+  color: #94a3b8;
+  cursor: pointer;
+  text-align: center;
+  font-size: 13px;
+  transition: all 0.2s;
+  font-family: 'Noto Sans Thai', sans-serif;
+}
+
+.level-btn:hover {
+  border-color: #3b82f6;
+  color: #e2e8f0;
+}
+
+.level-btn.selected {
+  border-color: #3b82f6;
+  background: rgba(59, 130, 246, 0.15);
+  color: #3b82f6;
+}
+
+/* Group selector */
+.group-category {
+  margin-bottom: 12px;
+}
+
+.group-category-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 0;
+  cursor: pointer;
+  font-weight: 600;
+  color: #e2e8f0;
+}
+
+.group-list {
+  padding-left: 8px;
+}
+
+.group-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 10px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.group-item:hover {
+  background: rgba(59, 130, 246, 0.08);
+}
+
+.group-item-name {
+  flex: 1;
+  font-size: 13px;
+}
+
+.group-item-members {
+  font-size: 11px;
+  color: #64748b;
+}
+
+/* Log entries */
+.log-entry {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 12px;
+  font-size: 12px;
+  border-bottom: 1px solid rgba(45, 53, 85, 0.3);
+}
+
+.log-time {
+  color: #64748b;
+  white-space: nowrap;
+}
+
+.log-message {
+  flex: 1;
+  color: #e2e8f0;
+}
+
+/* Chart (CSS only) */
+.bar-chart {
+  display: flex;
+  align-items: flex-end;
+  gap: 8px;
+  height: 200px;
+  padding: 0 8px;
+  border-bottom: 1px solid #2d3555;
+}
+
+.bar-group {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 100%;
+  justify-content: flex-end;
+}
+
+.bar-stack {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  width: 100%;
+  max-width: 50px;
+}
+
+.bar {
+  width: 100%;
+  border-radius: 3px 3px 0 0;
+  min-height: 2px;
+  transition: height 0.3s;
+}
+
+.bar-success {
+  background: linear-gradient(180deg, #22c55e, #16a34a);
+}
+
+.bar-fail {
+  background: linear-gradient(180deg, #ef4444, #dc2626);
+}
+
+.bar-label {
+  font-size: 11px;
+  color: #64748b;
+  margin-top: 6px;
+  text-align: center;
+}
+
+/* Modal */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.modal {
+  background: #1a1f35;
+  border: 1px solid #2d3555;
+  border-radius: 16px;
+  padding: 24px;
+  min-width: 400px;
+  max-width: 600px;
+  max-height: 80vh;
+  overflow-y: auto;
+}
+
+.modal-title {
+  font-size: 18px;
+  font-weight: 600;
+  margin-bottom: 16px;
+}
+
+.modal-actions {
+  display: flex;
+  gap: 10px;
+  justify-content: flex-end;
+  margin-top: 20px;
+}
+
+/* Utility */
+.flex { display: flex; }
+.flex-1 { flex: 1; }
+.items-center { align-items: center; }
+.justify-between { justify-content: space-between; }
+.gap-2 { gap: 8px; }
+.gap-3 { gap: 12px; }
+.gap-4 { gap: 16px; }
+.mt-2 { margin-top: 8px; }
+.mt-3 { margin-top: 12px; }
+.mt-4 { margin-top: 16px; }
+.mb-2 { margin-bottom: 8px; }
+.mb-3 { margin-bottom: 12px; }
+.mb-4 { margin-bottom: 16px; }
+.text-sm { font-size: 13px; }
+.text-xs { font-size: 11px; }
+.text-muted { color: #64748b; }
+.text-success { color: #22c55e; }
+.text-danger { color: #ef4444; }
+.text-warning { color: #eab308; }
+.text-info { color: #3b82f6; }
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.w-full { width: 100%; }
+.inline-flex { display: inline-flex; }
+
+/* Caption preview */
+.caption-options {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.caption-option {
+  padding: 14px;
+  background: #0f1322;
+  border: 2px solid #2d3555;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-size: 13px;
+  line-height: 1.6;
+  white-space: pre-wrap;
+}
+
+.caption-option:hover {
+  border-color: #3b82f6;
+}
+
+.caption-option.selected {
+  border-color: #3b82f6;
+  background: rgba(59, 130, 246, 0.1);
+}
+
+/* Speed buttons */
+.speed-group {
+  display: flex;
+  gap: 8px;
+}
+
+.speed-btn {
+  flex: 1;
+  padding: 10px;
+  background: #0f1322;
+  border: 2px solid #2d3555;
+  border-radius: 8px;
+  color: #94a3b8;
+  cursor: pointer;
+  text-align: center;
+  transition: all 0.2s;
+  font-family: 'Noto Sans Thai', sans-serif;
+  font-size: 13px;
+}
+
+.speed-btn:hover {
+  border-color: #3b82f6;
+}
+
+.speed-btn.selected {
+  border-color: #3b82f6;
+  background: rgba(59, 130, 246, 0.15);
+  color: #3b82f6;
+}
+
+/* Search bar */
+.search-input {
+  padding: 10px 14px 10px 38px;
+  background: #0f1322;
+  border: 1px solid #2d3555;
+  border-radius: 8px;
+  color: #e2e8f0;
+  font-family: 'Noto Sans Thai', sans-serif;
+  font-size: 14px;
+  width: 300px;
+}
+
+.search-input:focus {
+  outline: none;
+  border-color: #3b82f6;
+}
+
+.search-wrapper {
+  position: relative;
+}
+
+.search-wrapper .search-icon {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #64748b;
+}
+
+/* Color picker */
+.color-options {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.color-dot {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  cursor: pointer;
+  border: 2px solid transparent;
+  transition: all 0.2s;
+}
+
+.color-dot:hover,
+.color-dot.selected {
+  border-color: white;
+  transform: scale(1.2);
+}
+
+/* Notification toast */
+.toast {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  padding: 12px 20px;
+  background: #1a1f35;
+  border: 1px solid #2d3555;
+  border-radius: 10px;
+  color: #e2e8f0;
+  font-size: 13px;
+  z-index: 2000;
+  animation: slideIn 0.3s ease;
+}
+
+.toast-success { border-color: #22c55e; }
+.toast-error { border-color: #ef4444; }
+
+@keyframes slideIn {
+  from { transform: translateY(20px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+/* Sharing overlay */
+.sharing-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(15, 19, 34, 0.9);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 900;
+}
+
+.sharing-panel {
+  background: #1a1f35;
+  border: 1px solid #2d3555;
+  border-radius: 16px;
+  padding: 30px;
+  width: 500px;
+  text-align: center;
+}
+  </style>
+  <script src="lib/react.min.js"></script>
+  <script src="lib/react-dom.min.js"></script>
+  <script src="lib/babel.min.js"></script>
+</head>
+<body>
+  <div id="root"></div>
+  <script type="text/babel">
+const { useState, useEffect, useCallback, useRef } = React;
+
+// === components/Sidebar.jsx ===
+function Sidebar({ currentPage, onNavigate }) {
+  const menuItems = [
+    { id: 'share', label: 'แชร์โพสต์', icon: '🚀' },
+    { id: 'groups', label: 'จัดการกลุ่ม', icon: '👥' },
+    { id: 'report', label: 'รายงาน', icon: '📊' },
+    { id: 'settings', label: 'ตั้งค่า', icon: '⚙️' }
+  ];
+
+  return (
+    <div className="sidebar">
+      <div className="sidebar-logo">
+        <h1>ShareBoost</h1>
+        <span>Facebook Group Share Tool</span>
+      </div>
+      <div className="sidebar-menu">
+        {menuItems.map(item => (
+          <div
+            key={item.id}
+            className={`sidebar-item ${currentPage === item.id ? 'active' : ''}`}
+            onClick={() => onNavigate(item.id)}
+          >
+            <span className="icon">{item.icon}</span>
+            <span>{item.label}</span>
+          </div>
+        ))}
+      </div>
+      <div style={{ padding: '16px 20px', borderTop: '1px solid #2d3555', fontSize: '11px', color: '#475569' }}>
+        v1.0.0
+      </div>
+    </div>
+  );
+}
+
+// === components/ProgressBar.jsx ===
+function ProgressBar({ current, total, label, successCount, failCount, message }) {
+  const percentage = total > 0 ? Math.round((current / total) * 100) : 0;
+
+  return (
+    <div className="progress-container">
+      {label && <div className="text-sm mb-2" style={{ fontWeight: 600 }}>{label}</div>}
+      <div className="progress-bar">
+        <div className="progress-fill" style={{ width: `${percentage}%` }}></div>
+      </div>
+      <div className="progress-text">
+        <span>{message || `${current} / ${total}`}</span>
+        <span>{percentage}%</span>
+      </div>
+      {(successCount !== undefined || failCount !== undefined) && (
+        <div className="flex gap-3 mt-2 text-xs">
+          {successCount !== undefined && <span className="text-success">✅ สำเร็จ {successCount}</span>}
+          {failCount !== undefined && <span className="text-danger">❌ ล้มเหลว {failCount}</span>}
+        </div>
+      )}
+    </div>
+  );
+}
+
+// === components/GroupSelector.jsx ===
+
+function GroupSelector({ api, accountId, selectedGroups, onSelectionChange }) {
+  const [groups, setGroups] = useState([]);
+  const [categories, setCategories] = useState([]);
+  const [search, setSearch] = useState('');
+  const [expandedCategories, setExpandedCategories] = useState({});
+
+  useEffect(() => {
+    loadData();
+  }, [accountId]);
+
+  async function loadData() {
+    try {
+      const [grps, cats] = await Promise.all([
+        api.getGroups(accountId),
+        api.getCategories()
+      ]);
+      setGroups(grps);
+      setCategories(cats);
+      // Expand all categories by default
+      const expanded = {};
+      cats.forEach(c => expanded[c.name] = true);
+      setExpandedCategories(expanded);
+    } catch (err) {
+      console.error('Error loading groups:', err);
+    }
+  }
+
+  function toggleGroup(groupId) {
+    const newSelection = selectedGroups.includes(groupId)
+      ? selectedGroups.filter(id => id !== groupId)
+      : [...selectedGroups, groupId];
+    onSelectionChange(newSelection);
+  }
+
+  function toggleCategory(categoryName) {
+    const categoryGroups = filteredGroups.filter(g => g.category === categoryName);
+    const categoryGroupIds = categoryGroups.map(g => g.id);
+    const allSelected = categoryGroupIds.every(id => selectedGroups.includes(id));
+
+    let newSelection;
+    if (allSelected) {
+      newSelection = selectedGroups.filter(id => !categoryGroupIds.includes(id));
+    } else {
+      const toAdd = categoryGroupIds.filter(id => !selectedGroups.includes(id));
+      newSelection = [...selectedGroups, ...toAdd];
+    }
+    onSelectionChange(newSelection);
+  }
+
+  function toggleExpandCategory(categoryName) {
+    setExpandedCategories(prev => ({ ...prev, [categoryName]: !prev[categoryName] }));
+  }
+
+  function selectAll() {
+    onSelectionChange(filteredGroups.map(g => g.id));
+  }
+
+  function deselectAll() {
+    onSelectionChange([]);
+  }
+
+  const filteredGroups = groups.filter(g => {
+    if (g.status === 'banned') return false;
+    if (search && !g.name.toLowerCase().includes(search.toLowerCase())) return false;
+    return true;
+  });
+
+  const groupsByCategory = {};
+  filteredGroups.forEach(g => {
+    const cat = g.category || 'ทั่วไป';
+    if (!groupsByCategory[cat]) groupsByCategory[cat] = [];
+    groupsByCategory[cat].push(g);
+  });
+
+  return (
+    <div>
+      <div className="flex items-center justify-between mb-3">
+        <div className="flex items-center gap-2">
+          <span className="text-sm text-muted">เลือกแล้ว {selectedGroups.length} กลุ่ม</span>
+        </div>
+        <div className="flex gap-2">
+          <button className="btn btn-sm btn-secondary" onClick={selectAll}>เลือกทั้งหมด</button>
+          <button className="btn btn-sm btn-secondary" onClick={deselectAll}>ยกเลิกทั้งหมด</button>
+        </div>
+      </div>
+
+      <input
+        type="text"
+        className="form-input mb-3"
+        placeholder="🔍 ค้นหากลุ่ม..."
+        value={search}
+        onChange={e => setSearch(e.target.value)}
+      />
+
+      <div style={{ maxHeight: '300px', overflowY: 'auto' }}>
+        {Object.entries(groupsByCategory).map(([categoryName, categoryGroups]) => {
+          const allSelected = categoryGroups.every(g => selectedGroups.includes(g.id));
+          const someSelected = categoryGroups.some(g => selectedGroups.includes(g.id));
+          const isExpanded = expandedCategories[categoryName] !== false;
+          const cat = categories.find(c => c.name === categoryName);
+
+          return (
+            <div key={categoryName} className="group-category">
+              <div className="group-category-header" onClick={() => toggleExpandCategory(categoryName)}>
+                <span style={{ cursor: 'pointer', fontSize: '12px' }}>{isExpanded ? '▼' : '►'}</span>
+                <div
+                  className={`checkbox ${allSelected ? 'checked' : ''}`}
+                  style={{ opacity: someSelected && !allSelected ? 0.5 : 1 }}
+                  onClick={(e) => { e.stopPropagation(); toggleCategory(categoryName); }}
+                />
+                <span style={{ color: cat?.color || '#3b82f6' }}>{categoryName}</span>
+                <span className="text-xs text-muted">({categoryGroups.length})</span>
+              </div>
+              {isExpanded && (
+                <div className="group-list">
+                  {categoryGroups.map(group => (
+                    <div key={group.id} className="group-item" onClick={() => toggleGroup(group.id)}>
+                      <div className={`checkbox ${selectedGroups.includes(group.id) ? 'checked' : ''}`} />
+                      <span className="group-item-name">{group.name}</span>
+                      <span className="group-item-members">
+                        {group.member_count ? `${group.member_count.toLocaleString()} สมาชิก` : ''}
+                      </span>
+                      <span style={{ fontSize: '10px' }}>
+                        {group.status === 'active' ? '🟢' : group.status === 'warning' ? '🟡' : '🔴'}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          );
+        })}
+        {Object.keys(groupsByCategory).length === 0 && (
+          <div className="text-sm text-muted" style={{ textAlign: 'center', padding: '30px' }}>
+            {groups.length === 0 ? 'ยังไม่มีกลุ่ม — ไปที่หน้า "จัดการกลุ่ม" เพื่อดึงกลุ่ม' : 'ไม่พบกลุ่มที่ค้นหา'}
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
+// === components/CaptionAI.jsx ===
+
+const CAPTION_STYLES = [
+  { id: 'direct_sell', label: 'ขายตรง🔥' },
+  { id: 'educate', label: 'ให้ความรู้📖' },
+  { id: 'funny', label: 'ตลก😂' },
+  { id: 'story', label: 'เล่าเรื่อง💬' },
+  { id: 'question', label: 'ถามนำ❓' },
+  { id: 'announce', label: 'ประกาศ📢' }
+];
+
+function CaptionAI({ api, onCaptionSelect, showToast }) {
+  const [enabled, setEnabled] = useState(false);
+  const [style, setStyle] = useState('direct_sell');
+  const [topic, setTopic] = useState('');
+  const [details, setDetails] = useState('');
+  const [intensity, setIntensity] = useState('medium');
+  const [length, setLength] = useState('medium');
+  const [emojiLevel, setEmojiLevel] = useState('medium');
+  const [uniquePerGroup, setUniquePerGroup] = useState(false);
+  const [generating, setGenerating] = useState(false);
+  const [captions, setCaptions] = useState([]);
+  const [selectedCaption, setSelectedCaption] = useState(null);
+
+  // Non-AI caption
+  const [manualCaption, setManualCaption] = useState('');
+
+  async function handleGenerate() {
+    if (!topic.trim()) {
+      showToast('กรุณาใส่หัวข้อ', 'error');
+      return;
+    }
+    setGenerating(true);
+    setCaptions([]);
+    setSelectedCaption(null);
+    try {
+      const results = await api.generateCaptions({
+        topic, details, style, intensity, length, emojiLevel
+      });
+      setCaptions(results);
+    } catch (err) {
+      showToast(`สร้าง caption ไม่สำเร็จ: ${err.message || err}`, 'error');
+    }
+    setGenerating(false);
+  }
+
+  const [editedCaption, setEditedCaption] = useState('');
+
+  function handleSelect(index) {
+    setSelectedCaption(index);
+    setEditedCaption(captions[index]);
+    if (onCaptionSelect) {
+      onCaptionSelect({
+        caption: captions[index],
+        useAi: true,
+        style,
+        uniquePerGroup,
+        params: { topic, details, style, intensity, length, emojiLevel }
+      });
+    }
+  }
+
+  function handleEditCaption(value) {
+    setEditedCaption(value);
+    if (onCaptionSelect) {
+      onCaptionSelect({
+        caption: value,
+        useAi: true,
+        style,
+        uniquePerGroup,
+        params: { topic, details, style, intensity, length, emojiLevel }
+      });
+    }
+  }
+
+  function handleManualChange(value) {
+    setManualCaption(value);
+    if (onCaptionSelect) {
+      onCaptionSelect({ caption: value, useAi: false });
+    }
+  }
+
+  return (
+    <div className="card">
+      <div className="flex items-center justify-between mb-3">
+        <span className="card-title" style={{ marginBottom: 0 }}>💬 Caption</span>
+        <div className="flex items-center gap-3">
+          <span className="text-sm text-muted">AI Caption</span>
+          <div className={`toggle ${enabled ? 'active' : ''}`} onClick={() => setEnabled(!enabled)}>
+            <div className="toggle-knob" />
+          </div>
+        </div>
+      </div>
+
+      {!enabled ? (
+        <div>
+          <div className="form-group">
+            <label className="form-label">Caption (รองรับ Spintax: {'{'}คำ1|คำ2|คำ3{'}'})</label>
+            <textarea
+              className="form-textarea"
+              rows="4"
+              placeholder="พิมพ์ caption ที่ต้องการ... ใช้ {คำ1|คำ2} เพื่อสุ่มคำ"
+              value={manualCaption}
+              onChange={e => handleManualChange(e.target.value)}
+            />
+          </div>
+        </div>
+      ) : (
+        <div>
+          <div className="form-group">
+            <label className="form-label">สไตล์</label>
+            <div className="style-grid">
+              {CAPTION_STYLES.map(s => (
+                <div
+                  key={s.id}
+                  className={`style-btn ${style === s.id ? 'selected' : ''}`}
+                  onClick={() => setStyle(s.id)}
+                >
+                  {s.label}
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <div className="form-group">
+            <label className="form-label">หัวข้อ</label>
+            <input
+              type="text"
+              className="form-input"
+              placeholder="เช่น ครีมหน้าขาว, คอร์สออนไลน์..."
+              value={topic}
+              onChange={e => setTopic(e.target.value)}
+            />
+          </div>
+
+          <div className="form-group">
+            <label className="form-label">รายละเอียด</label>
+            <textarea
+              className="form-textarea"
+              rows="3"
+              placeholder="รายละเอียดเพิ่มเติมเกี่ยวกับสินค้า/บริการ..."
+              value={details}
+              onChange={e => setDetails(e.target.value)}
+            />
+          </div>
+
+          <div className="grid-2">
+            <div className="form-group">
+              <label className="form-label">ความแรง</label>
+              <div className="level-group">
+                {[{ id: 'light', label: 'เบา' }, { id: 'medium', label: 'กลาง' }, { id: 'heavy', label: 'แรง' }].map(l => (
+                  <div key={l.id} className={`level-btn ${intensity === l.id ? 'selected' : ''}`} onClick={() => setIntensity(l.id)}>
+                    {l.label}
+                  </div>
+                ))}
+              </div>
+            </div>
+            <div className="form-group">
+              <label className="form-label">ความยาว</label>
+              <div className="level-group">
+                {[{ id: 'short', label: 'สั้น' }, { id: 'medium', label: 'กลาง' }, { id: 'long', label: 'ยาว' }].map(l => (
+                  <div key={l.id} className={`level-btn ${length === l.id ? 'selected' : ''}`} onClick={() => setLength(l.id)}>
+                    {l.label}
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          <div className="form-group">
+            <label className="form-label">Emoji</label>
+            <div className="level-group">
+              {[{ id: 'none', label: 'ไม่มี' }, { id: 'low', label: 'น้อย' }, { id: 'medium', label: 'ปานกลาง' }, { id: 'high', label: 'เยอะ' }].map(l => (
+                <div key={l.id} className={`level-btn ${emojiLevel === l.id ? 'selected' : ''}`} onClick={() => setEmojiLevel(l.id)}>
+                  {l.label}
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <div className="flex items-center gap-3 mb-3">
+            <div
+              className={`checkbox ${uniquePerGroup ? 'checked' : ''}`}
+              onClick={() => setUniquePerGroup(!uniquePerGroup)}
+            />
+            <span className="text-sm">สร้าง caption ไม่ซ้ำทุกกลุ่ม</span>
+          </div>
+
+          <button
+            className="btn btn-primary w-full"
+            onClick={handleGenerate}
+            disabled={generating}
+          >
+            {generating ? '⏳ กำลังสร้าง...' : '✨ สร้าง Caption'}
+          </button>
+
+          {captions.length > 0 && (
+            <div className="mt-3">
+              <label className="form-label">เลือก Caption ({captions.length} ตัวเลือก)</label>
+              <div className="caption-options">
+                {captions.map((cap, i) => (
+                  <div
+                    key={i}
+                    className={`caption-option ${selectedCaption === i ? 'selected' : ''}`}
+                    onClick={() => handleSelect(i)}
+                  >
+                    {cap}
+                  </div>
+                ))}
+              </div>
+              {selectedCaption !== null && (
+                <div className="mt-3">
+                  <label className="form-label">แก้ไข Caption ที่เลือก</label>
+                  <textarea
+                    className="form-textarea"
+                    rows="5"
+                    value={editedCaption}
+                    onChange={e => handleEditCaption(e.target.value)}
+                  />
+                </div>
+              )}
+            </div>
+          )}
+        </div>
+      )}
+    </div>
+  );
+}
+
+// === pages/SharePage.jsx ===
+function SharePage({ api, showToast, shareProgress, isSharing, setIsSharing, setShareProgress }) {
+  const [accounts, setAccounts] = useState([]);
+  const [selectedAccount, setSelectedAccount] = useState(null);
+  const [postTab, setPostTab] = useState('url');
+  const [postUrl, setPostUrl] = useState('');
+  const [postText, setPostText] = useState('');
+  const [selectedGroups, setSelectedGroups] = useState([]);
+  const [captionData, setCaptionData] = useState({ caption: '', useAi: false });
+  const [scheduleType, setScheduleType] = useState('now');
+  const [scheduleTime, setScheduleTime] = useState('');
+  const [speed, setSpeed] = useState('normal');
+  const [logs, setLogs] = useState([]);
+
+  useEffect(() => {
+    loadAccounts();
+  }, []);
+
+  useEffect(() => {
+    if (shareProgress) {
+      setLogs(prev => {
+        const newLog = {
+          time: new Date().toLocaleTimeString('th-TH'),
+          group: shareProgress.groupName,
+          message: shareProgress.message || shareProgress.status,
+          status: shareProgress.status
+        };
+        return [newLog, ...prev].slice(0, 100);
+      });
+    }
+  }, [shareProgress]);
+
+  async function loadAccounts() {
+    const accs = await api.getAccounts();
+    setAccounts(accs);
+    if (accs.length > 0 && !selectedAccount) setSelectedAccount(accs[0].id);
+  }
+
+  const speedMap = { fast: { min: 30, max: 120 }, normal: { min: 120, max: 300 }, slow: { min: 300, max: 600 } };
+
+  async function handleStartShare() {
+    if (!selectedAccount) { showToast('กรุณาเลือกบัญชี', 'error'); return; }
+    if (selectedGroups.length === 0) { showToast('กรุณาเลือกกลุ่มอย่างน้อย 1 กลุ่ม', 'error'); return; }
+    if (postTab === 'url' && !postUrl.trim()) { showToast('กรุณาใส่ URL โพสต์', 'error'); return; }
+    if (postTab === 'text' && !postText.trim() && !captionData.caption) { showToast('กรุณาใส่เนื้อหาโพสต์', 'error'); return; }
+
+    const sp = speedMap[speed];
+    setIsSharing(true);
+    setLogs([]);
+
+    try {
+      await api.startSharing({
+        accountId: selectedAccount,
+        groupIds: selectedGroups,
+        postUrl: postTab === 'url' ? postUrl : null,
+        postText: postTab === 'text' ? postText : null,
+        caption: captionData.caption,
+        captionStyle: captionData.style || '',
+        useAiCaption: captionData.useAi,
+        delayMin: sp.min,
+        delayMax: sp.max,
+        scheduleType,
+        scheduledAt: scheduleType === 'custom' ? scheduleTime : null
+      });
+      showToast('เริ่มแชร์แล้ว!', 'success');
+    } catch (err) {
+      showToast(`เกิดข้อผิดพลาด: ${err.message || err}`, 'error');
+      setIsSharing(false);
+    }
+  }
+
+  async function handleStop() {
+    await api.stopSharing();
+    setIsSharing(false);
+    showToast('หยุดแชร์แล้ว', 'success');
+  }
+
+  return (
+    <div>
+      <h1 className="page-title">🚀 แชร์โพสต์</h1>
+
+      {/* Account selector */}
+      <div className="card">
+        <div className="flex items-center gap-3">
+          <label className="form-label" style={{ marginBottom: 0, whiteSpace: 'nowrap' }}>บัญชี Facebook</label>
+          <select
+            className="form-select flex-1"
+            value={selectedAccount || ''}
+            onChange={e => setSelectedAccount(Number(e.target.value))}
+          >
+            <option value="">-- เลือกบัญชี --</option>
+            {accounts.map(acc => (
+              <option key={acc.id} value={acc.id}>
+                {acc.name} {acc.status === 'active' ? '🟢' : '🔴'}
+              </option>
+            ))}
+          </select>
+          {accounts.length === 0 && (
+            <span className="text-xs text-warning">ยังไม่มีบัญชี — ไปที่ตั้งค่าเพื่อเพิ่ม</span>
+          )}
+        </div>
+      </div>
+
+      {/* Post content */}
+      <div className="card">
+        <div className="card-title">📝 เนื้อหาโพสต์</div>
+        <div className="tabs">
+          <div className={`tab ${postTab === 'url' ? 'active' : ''}`} onClick={() => setPostTab('url')}>วาง URL</div>
+          <div className={`tab ${postTab === 'text' ? 'active' : ''}`} onClick={() => setPostTab('text')}>พิมพ์เอง</div>
+        </div>
+        {postTab === 'url' ? (
+          <input
+            type="text"
+            className="form-input"
+            placeholder="วาง URL โพสต์ Facebook ที่ต้องการแชร์..."
+            value={postUrl}
+            onChange={e => setPostUrl(e.target.value)}
+          />
+        ) : (
+          <textarea
+            className="form-textarea"
+            rows="4"
+            placeholder="พิมพ์เนื้อหาโพสต์..."
+            value={postText}
+            onChange={e => setPostText(e.target.value)}
+          />
+        )}
+      </div>
+
+      {/* AI Caption */}
+      <CaptionAI api={api} onCaptionSelect={setCaptionData} showToast={showToast} />
+
+      {/* Group selector */}
+      <div className="card">
+        <div className="card-title">👥 เลือกกลุ่ม</div>
+        <GroupSelector
+          api={api}
+          accountId={selectedAccount}
+          selectedGroups={selectedGroups}
+          onSelectionChange={setSelectedGroups}
+        />
+      </div>
+
+      {/* Schedule & Speed */}
+      <div className="grid-2">
+        <div className="card">
+          <div className="card-title">⏰ ตั้งเวลา</div>
+          <div className="level-group">
+            {[
+              { id: 'now', label: 'แชร์ทันที' },
+              { id: 'spread', label: 'กระจายตลอดวัน' },
+              { id: 'custom', label: 'ตั้งเวลาเอง' }
+            ].map(s => (
+              <div key={s.id} className={`level-btn ${scheduleType === s.id ? 'selected' : ''}`} onClick={() => setScheduleType(s.id)}>
+                {s.label}
+              </div>
+            ))}
+          </div>
+          {scheduleType === 'custom' && (
+            <input
+              type="datetime-local"
+              className="form-input mt-2"
+              value={scheduleTime}
+              onChange={e => setScheduleTime(e.target.value)}
+            />
+          )}
+        </div>
+        <div className="card">
+          <div className="card-title">⚡ ความเร็ว</div>
+          <div className="speed-group">
+            {[
+              { id: 'fast', label: 'เร็ว', desc: '30s-2m' },
+              { id: 'normal', label: 'ปกติ', desc: '2-5m' },
+              { id: 'slow', label: 'ช้า', desc: '5-10m' }
+            ].map(s => (
+              <div key={s.id} className={`speed-btn ${speed === s.id ? 'selected' : ''}`} onClick={() => setSpeed(s.id)}>
+                <div>{s.label}</div>
+                <div className="text-xs text-muted">{s.desc}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      {/* Start/Stop button */}
+      <div style={{ textAlign: 'center', margin: '20px 0' }}>
+        {!isSharing ? (
+          <button className="btn btn-success btn-lg" onClick={handleStartShare}>
+            🚀 เริ่มแชร์ ({selectedGroups.length} กลุ่ม)
+          </button>
+        ) : (
+          <button className="btn btn-danger btn-lg" onClick={handleStop}>
+            ⏹️ หยุดแชร์
+          </button>
+        )}
+      </div>
+
+      {/* Progress */}
+      {isSharing && shareProgress && (
+        <div className="card">
+          <div className="card-title">📡 สถานะ</div>
+          <ProgressBar
+            current={shareProgress.current || 0}
+            total={shareProgress.total || 0}
+            successCount={shareProgress.successCount}
+            failCount={shareProgress.failCount}
+            message={shareProgress.message}
+          />
+        </div>
+      )}
+
+      {/* Log */}
+      {logs.length > 0 && (
+        <div className="card">
+          <div className="card-title">📋 Log</div>
+          <div style={{ maxHeight: '200px', overflowY: 'auto' }}>
+            {logs.map((log, i) => (
+              <div key={i} className="log-entry">
+                <span className="log-time">{log.time}</span>
+                <span className="log-message">{log.group && `[${log.group}] `}{log.message}</span>
+                <span>
+                  {log.status === 'done' && <span className="badge badge-success">สำเร็จ</span>}
+                  {log.status === 'failed' && <span className="badge badge-danger">ล้มเหลว</span>}
+                  {log.status === 'sharing' && <span className="badge badge-info">กำลังแชร์</span>}
+                  {log.status === 'waiting' && <span className="badge badge-gray">รอ</span>}
+                </span>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+// === pages/GroupsPage.jsx ===
+function GroupsPage({ api, showToast }) {
+  const [groups, setGroups] = useState([]);
+  const [categories, setCategories] = useState([]);
+  const [accounts, setAccounts] = useState([]);
+  const [selectedAccount, setSelectedAccount] = useState(null);
+  const [search, setSearch] = useState('');
+  const [filterCategory, setFilterCategory] = useState('all');
+  const [selectedGroupIds, setSelectedGroupIds] = useState([]);
+  const [fetching, setFetching] = useState(false);
+  const [showCategoryModal, setShowCategoryModal] = useState(false);
+  const [showMoveCategoryModal, setShowMoveCategoryModal] = useState(false);
+  const [newCategoryName, setNewCategoryName] = useState('');
+  const [newCategoryColor, setNewCategoryColor] = useState('#3b82f6');
+  const [editCategory, setEditCategory] = useState(null);
+  const [joinKeyword, setJoinKeyword] = useState('');
+  const [joinMaxGroups, setJoinMaxGroups] = useState(5);
+  const [joining, setJoining] = useState(false);
+  const [joinResults, setJoinResults] = useState(null);
+
+  const COLORS = ['#3b82f6', '#8b5cf6', '#ec4899', '#f97316', '#22c55e', '#eab308', '#ef4444', '#06b6d4', '#6366f1', '#14b8a6'];
+
+  useEffect(() => { loadData(); }, [selectedAccount]);
+
+  async function loadData() {
+    const [accs, cats] = await Promise.all([api.getAccounts(), api.getCategories()]);
+    setAccounts(accs);
+    setCategories(cats);
+    if (accs.length > 0 && !selectedAccount) setSelectedAccount(accs[0].id);
+    if (selectedAccount) {
+      const grps = await api.getGroups(selectedAccount);
+      setGroups(grps);
+    }
+  }
+
+  async function handleFetchGroups() {
+    if (!selectedAccount) { showToast('กรุณาเลือกบัญชี', 'error'); return; }
+    setFetching(true);
+    try {
+      const result = await api.fetchGroups(selectedAccount);
+      if (result.success) {
+        showToast(`ดึงกลุ่มสำเร็จ ${result.groups?.length || 0} กลุ่ม`, 'success');
+        await loadData();
+      } else {
+        showToast(`ดึงกลุ่มไม่สำเร็จ: ${result.error}`, 'error');
+      }
+    } catch (err) {
+      showToast(`Error: ${err.message}`, 'error');
+    }
+    setFetching(false);
+  }
+
+  function toggleGroupSelect(id) {
+    setSelectedGroupIds(prev => prev.includes(id) ? prev.filter(x => x !== id) : [...prev, id]);
+  }
+
+  async function handleChangeCategory(category) {
+    if (selectedGroupIds.length === 0) { showToast('กรุณาเลือกกลุ่มก่อน', 'error'); return; }
+    await api.updateGroupCategory(selectedGroupIds, category);
+    setSelectedGroupIds([]);
+    setShowMoveCategoryModal(false);
+    showToast('ย้ายหมวดสำเร็จ', 'success');
+    loadData();
+  }
+
+  async function handleAddCategory() {
+    if (!newCategoryName.trim()) return;
+    if (editCategory) {
+      await api.updateCategory(editCategory.id, newCategoryName, newCategoryColor);
+    } else {
+      await api.addCategory(newCategoryName, newCategoryColor);
+    }
+    setNewCategoryName('');
+    setNewCategoryColor('#3b82f6');
+    setEditCategory(null);
+    setShowCategoryModal(false);
+    showToast(editCategory ? 'แก้ไขหมวดสำเร็จ' : 'เพิ่มหมวดสำเร็จ', 'success');
+    loadData();
+  }
+
+  async function handleDeleteCategory(id) {
+    await api.deleteCategory(id);
+    showToast('ลบหมวดสำเร็จ', 'success');
+    loadData();
+  }
+
+  async function handleDeleteGroup(id) {
+    await api.deleteGroup(id);
+    showToast('ลบกลุ่มสำเร็จ', 'success');
+    loadData();
+  }
+
+  async function handleStatusChange(id, status) {
+    await api.updateGroupStatus(id, status);
+    loadData();
+  }
+
+  async function handleSearchJoinGroups() {
+    if (!selectedAccount) { showToast('กรุณาเลือกบัญชี', 'error'); return; }
+    if (!joinKeyword.trim()) { showToast('กรุณาใส่คำค้นหา', 'error'); return; }
+    setJoining(true);
+    setJoinResults(null);
+    try {
+      const result = await api.searchJoinGroups(selectedAccount, joinKeyword, joinMaxGroups);
+      setJoinResults(result);
+      if (result.success) {
+        showToast(`เข้าร่วมกลุ่มสำเร็จ ${result.totalJoined} กลุ่ม`, 'success');
+      } else {
+        showToast(`เกิดข้อผิดพลาด: ${result.error}`, 'error');
+      }
+    } catch (err) {
+      showToast(`Error: ${err.message}`, 'error');
+    }
+    setJoining(false);
+  }
+
+  const filteredGroups = groups.filter(g => {
+    if (search && !g.name.toLowerCase().includes(search.toLowerCase())) return false;
+    if (filterCategory !== 'all' && g.category !== filterCategory) return false;
+    return true;
+  });
+
+  return (
+    <div>
+      <div className="flex items-center justify-between mb-4">
+        <h1 className="page-title" style={{ marginBottom: 0 }}>👥 จัดการกลุ่ม</h1>
+        <div className="flex gap-2">
+          <select className="form-select" style={{ width: 'auto' }} value={selectedAccount || ''} onChange={e => setSelectedAccount(Number(e.target.value))}>
+            <option value="">-- เลือกบัญชี --</option>
+            {accounts.map(acc => <option key={acc.id} value={acc.id}>{acc.name}</option>)}
+          </select>
+          <button className="btn btn-primary" onClick={handleFetchGroups} disabled={fetching}>
+            {fetching ? '⏳ กำลังดึง...' : '🔄 ดึงกลุ่มใหม่'}
+          </button>
+        </div>
+      </div>
+
+      {/* Filters */}
+      <div className="card">
+        <div className="flex items-center gap-3 mb-3">
+          <input type="text" className="form-input" style={{ width: '300px' }} placeholder="🔍 ค้นหากลุ่ม..." value={search} onChange={e => setSearch(e.target.value)} />
+          <select className="form-select" style={{ width: 'auto' }} value={filterCategory} onChange={e => setFilterCategory(e.target.value)}>
+            <option value="all">ทุกหมวด</option>
+            {categories.map(c => <option key={c.id} value={c.name}>{c.name}</option>)}
+          </select>
+          <button className="btn btn-sm btn-secondary" onClick={() => setShowCategoryModal(true)}>➕ เพิ่มหมวด</button>
+          {selectedGroupIds.length > 0 && (
+            <button className="btn btn-sm btn-primary" onClick={() => setShowMoveCategoryModal(true)}>
+              📁 ย้ายหมวด ({selectedGroupIds.length})
+            </button>
+          )}
+        </div>
+
+        {/* Category chips */}
+        <div className="flex gap-2 mb-3" style={{ flexWrap: 'wrap' }}>
+          {categories.map(cat => (
+            <div key={cat.id} className="flex items-center gap-2" style={{ background: '#0f1322', padding: '4px 10px', borderRadius: '20px', fontSize: '12px' }}>
+              <span style={{ width: 8, height: 8, borderRadius: '50%', background: cat.color, display: 'inline-block' }}></span>
+              <span>{cat.name}</span>
+              <span className="text-muted">({groups.filter(g => g.category === cat.name).length})</span>
+              <span style={{ cursor: 'pointer', opacity: 0.5 }} onClick={() => { setEditCategory(cat); setNewCategoryName(cat.name); setNewCategoryColor(cat.color); setShowCategoryModal(true); }}>✏️</span>
+              {cat.name !== 'ทั่วไป' && <span style={{ cursor: 'pointer', opacity: 0.5 }} onClick={() => handleDeleteCategory(cat.id)}>🗑️</span>}
+            </div>
+          ))}
+        </div>
+
+        {/* Groups table */}
+        <div className="table-container">
+          <table>
+            <thead>
+              <tr>
+                <th style={{ width: 30 }}></th>
+                <th>ชื่อกลุ่ม</th>
+                <th>สมาชิก</th>
+                <th>หมวด</th>
+                <th>สถานะ</th>
+                <th>แชร์ล่าสุด</th>
+                <th>สำเร็จ/ล้มเหลว</th>
+                <th style={{ width: 80 }}></th>
+              </tr>
+            </thead>
+            <tbody>
+              {filteredGroups.map(group => (
+                <tr key={group.id}>
+                  <td>
+                    <div className={`checkbox ${selectedGroupIds.includes(group.id) ? 'checked' : ''}`} onClick={() => toggleGroupSelect(group.id)} />
+                  </td>
+                  <td>
+                    <div className="text-sm" style={{ fontWeight: 500 }}>{group.name}</div>
+                    <div className="text-xs text-muted">{group.url}</div>
+                  </td>
+                  <td>{group.member_count ? group.member_count.toLocaleString() : '-'}</td>
+                  <td>
+                    <span className="badge badge-info">{group.category || 'ทั่วไป'}</span>
+                  </td>
+                  <td>
+                    <select
+                      className="form-select"
+                      style={{ width: 'auto', padding: '4px 8px', fontSize: '12px', background: 'transparent', border: 'none' }}
+                      value={group.status}
+                      onChange={e => handleStatusChange(group.id, e.target.value)}
+                    >
+                      <option value="active">🟢 ใช้ได้</option>
+                      <option value="warning">🟡 ระวัง</option>
+                      <option value="banned">🔴 โดนแบน</option>
+                    </select>
+                  </td>
+                  <td className="text-xs text-muted">{group.last_shared_at || '-'}</td>
+                  <td className="text-xs">
+                    <span className="text-success">{group.share_count}</span> / <span className="text-danger">{group.fail_count}</span>
+                  </td>
+                  <td>
+                    <button className="btn btn-sm btn-danger" onClick={() => handleDeleteGroup(group.id)}>🗑️</button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+          {filteredGroups.length === 0 && (
+            <div className="text-sm text-muted" style={{ textAlign: 'center', padding: '30px' }}>
+              {groups.length === 0 ? 'ยังไม่มีกลุ่ม — กด "ดึงกลุ่มใหม่" เพื่อเริ่มต้น' : 'ไม่พบกลุ่มที่ค้นหา'}
+            </div>
+          )}
+        </div>
+      </div>
+
+      {/* Search & Join Groups */}
+      <div className="card">
+        <div className="card-title">🔍 ค้นหาและเข้าร่วมกลุ่ม</div>
+        <div className="flex gap-3 items-center mb-3">
+          <div className="form-group flex-1" style={{ marginBottom: 0 }}>
+            <input
+              type="text"
+              className="form-input"
+              placeholder="คำค้นหา เช่น ขายของออนไลน์, รีวิวสินค้า..."
+              value={joinKeyword}
+              onChange={e => setJoinKeyword(e.target.value)}
+            />
+          </div>
+          <div className="form-group" style={{ marginBottom: 0, width: '120px' }}>
+            <input
+              type="number"
+              className="form-input"
+              placeholder="จำนวน"
+              min="1"
+              max="50"
+              value={joinMaxGroups}
+              onChange={e => setJoinMaxGroups(Number(e.target.value))}
+            />
+          </div>
+          <button className="btn btn-primary" onClick={handleSearchJoinGroups} disabled={joining}>
+            {joining ? '⏳ กำลังค้นหา...' : '🔍 เริ่มค้นหาและเข้าร่วม'}
+          </button>
+        </div>
+        <div className="text-xs text-muted mb-2">จำนวนกลุ่มสูงสุดที่ต้องการเข้าร่วม: {joinMaxGroups}</div>
+
+        {joining && (
+          <div className="text-sm text-info" style={{ padding: '10px', textAlign: 'center' }}>
+            กำลังค้นหาและเข้าร่วมกลุ่ม... กรุณารอสักครู่
+          </div>
+        )}
+
+        {joinResults && (
+          <div className="mt-3">
+            <div className="text-sm mb-2">
+              ผลลัพธ์: เข้าร่วมสำเร็จ <span className="text-success">{joinResults.totalJoined || 0}</span> กลุ่ม
+            </div>
+            {joinResults.joinedGroups && joinResults.joinedGroups.length > 0 && (
+              <div style={{ maxHeight: '200px', overflowY: 'auto' }}>
+                {joinResults.joinedGroups.map((g, i) => (
+                  <div key={i} className="log-entry">
+                    <span className="text-success">✅</span>
+                    <span className="log-message">{g.name}</span>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        )}
+      </div>
+
+      {/* Add/Edit Category Modal */}
+      {showCategoryModal && (
+        <div className="modal-overlay" onClick={() => { setShowCategoryModal(false); setEditCategory(null); }}>
+          <div className="modal" onClick={e => e.stopPropagation()}>
+            <div className="modal-title">{editCategory ? '✏️ แก้ไขหมวด' : '➕ เพิ่มหมวดใหม่'}</div>
+            <div className="form-group">
+              <label className="form-label">ชื่อหมวด</label>
+              <input type="text" className="form-input" value={newCategoryName} onChange={e => setNewCategoryName(e.target.value)} placeholder="เช่น ขายของ, ข่าว..." />
+            </div>
+            <div className="form-group">
+              <label className="form-label">สี</label>
+              <div className="color-options">
+                {COLORS.map(color => (
+                  <div key={color} className={`color-dot ${newCategoryColor === color ? 'selected' : ''}`} style={{ background: color }} onClick={() => setNewCategoryColor(color)} />
+                ))}
+              </div>
+            </div>
+            <div className="modal-actions">
+              <button className="btn btn-secondary" onClick={() => { setShowCategoryModal(false); setEditCategory(null); }}>ยกเลิก</button>
+              <button className="btn btn-primary" onClick={handleAddCategory}>{editCategory ? 'บันทึก' : 'เพิ่ม'}</button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Move Category Modal */}
+      {showMoveCategoryModal && (
+        <div className="modal-overlay" onClick={() => setShowMoveCategoryModal(false)}>
+          <div className="modal" onClick={e => e.stopPropagation()}>
+            <div className="modal-title">📁 ย้ายหมวด ({selectedGroupIds.length} กลุ่ม)</div>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+              {categories.map(cat => (
+                <button key={cat.id} className="btn btn-secondary w-full" style={{ justifyContent: 'flex-start' }} onClick={() => handleChangeCategory(cat.name)}>
+                  <span style={{ width: 10, height: 10, borderRadius: '50%', background: cat.color, display: 'inline-block' }}></span>
+                  {cat.name}
+                </button>
+              ))}
+            </div>
+            <div className="modal-actions">
+              <button className="btn btn-secondary" onClick={() => setShowMoveCategoryModal(false)}>ยกเลิก</button>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+// === pages/ReportPage.jsx ===
+function ReportPage({ api, showToast, shareProgress, isSharing }) {
+  const [stats, setStats] = useState({ total: 0, success: 0, failed: 0, pending: 0 });
+  const [weeklyStats, setWeeklyStats] = useState([]);
+  const [history, setHistory] = useState([]);
+  const [filterDate, setFilterDate] = useState(new Date().toISOString().split('T')[0]);
+  const [filterStatus, setFilterStatus] = useState('');
+
+  useEffect(() => { loadData(); }, [filterDate, filterStatus]);
+
+  // Auto-refresh ทุก 10 วินาที
+  useEffect(() => {
+    const timer = setInterval(loadData, 10000);
+    return () => clearInterval(timer);
+  }, [filterDate, filterStatus]);
+
+  // Refresh เมื่อแชร์เสร็จ
+  useEffect(() => {
+    if (!isSharing) loadData();
+  }, [isSharing]);
+
+  async function loadData() {
+    try {
+      const [todayStats, weekly, hist] = await Promise.all([
+        api.getTodayStats(),
+        api.getWeeklyStats(),
+        api.getShareHistory({ date: filterDate || undefined, status: filterStatus || undefined })
+      ]);
+      if (todayStats) setStats(todayStats);
+      if (weekly) setWeeklyStats(weekly);
+      if (hist) setHistory(hist);
+    } catch(e) {
+      console.error('ReportPage loadData error:', e);
+    }
+  }
+
+  const maxBarValue = Math.max(...weeklyStats.map(d => (d.success || 0) + (d.failed || 0)), 1);
+
+  return (
+    <div>
+      <h1 className="page-title">📊 รายงาน</h1>
+
+      {/* Today stats */}
+      <div className="stats-grid">
+        <div className="stat-card">
+          <div className="stat-value" style={{ color: '#3b82f6' }}>{stats.total}</div>
+          <div className="stat-label">ทั้งหมด</div>
+        </div>
+        <div className="stat-card">
+          <div className="stat-value" style={{ color: '#22c55e' }}>{stats.success}</div>
+          <div className="stat-label">สำเร็จ</div>
+        </div>
+        <div className="stat-card">
+          <div className="stat-value" style={{ color: '#ef4444' }}>{stats.failed}</div>
+          <div className="stat-label">ล้มเหลว</div>
+        </div>
+        <div className="stat-card">
+          <div className="stat-value" style={{ color: '#eab308' }}>{stats.pending}</div>
+          <div className="stat-label">รอคิว</div>
+        </div>
+      </div>
+
+      {/* Progress if sharing */}
+      {isSharing && shareProgress && (
+        <div className="card">
+          <div className="card-title">📡 กำลังแชร์</div>
+          <ProgressBar
+            current={shareProgress.current || 0}
+            total={shareProgress.total || 0}
+            successCount={shareProgress.successCount}
+            failCount={shareProgress.failCount}
+            message={shareProgress.message}
+          />
+        </div>
+      )}
+
+      {/* Weekly chart */}
+      <div className="card">
+        <div className="card-title">📈 สถิติ 7 วัน</div>
+        {weeklyStats.length > 0 ? (
+          <div>
+            <div className="bar-chart">
+              {weeklyStats.map((day, i) => {
+                const total = (day.success || 0) + (day.failed || 0);
+                const successH = total > 0 ? ((day.success || 0) / maxBarValue) * 180 : 2;
+                const failH = total > 0 ? ((day.failed || 0) / maxBarValue) * 180 : 0;
+                return (
+                  <div key={i} className="bar-group">
+                    <div className="bar-stack">
+                      {failH > 0 && <div className="bar bar-fail" style={{ height: `${failH}px` }}></div>}
+                      <div className="bar bar-success" style={{ height: `${successH}px` }}></div>
+                    </div>
+                    <div className="bar-label">{day.date?.slice(5) || ''}</div>
+                  </div>
+                );
+              })}
+            </div>
+            <div className="flex gap-4 mt-3 justify-center text-xs">
+              <span><span style={{ display: 'inline-block', width: 10, height: 10, background: '#22c55e', borderRadius: 2, marginRight: 4 }}></span>สำเร็จ</span>
+              <span><span style={{ display: 'inline-block', width: 10, height: 10, background: '#ef4444', borderRadius: 2, marginRight: 4 }}></span>ล้มเหลว</span>
+            </div>
+          </div>
+        ) : (
+          <div className="text-sm text-muted" style={{ textAlign: 'center', padding: '40px' }}>ยังไม่มีข้อมูลสถิติ</div>
+        )}
+      </div>
+
+      {/* History */}
+      <div className="card">
+        <div className="flex items-center justify-between mb-3">
+          <div className="card-title" style={{ marginBottom: 0 }}>📋 ประวัติการแชร์</div>
+          <div className="flex gap-2">
+            <input type="date" className="form-input" style={{ width: 'auto' }} value={filterDate} onChange={e => setFilterDate(e.target.value)} />
+            <select className="form-select" style={{ width: 'auto' }} value={filterStatus} onChange={e => setFilterStatus(e.target.value)}>
+              <option value="">ทุกสถานะ</option>
+              <option value="success">สำเร็จ</option>
+              <option value="failed">ล้มเหลว</option>
+              <option value="pending">รอคิว</option>
+            </select>
+            <button className="btn btn-sm btn-secondary" onClick={loadData}>🔄 รีเฟรช</button>
+          </div>
+        </div>
+        <div className="table-container">
+          <table>
+            <thead>
+              <tr>
+                <th>เวลา</th>
+                <th>บัญชี</th>
+                <th>กลุ่ม</th>
+                <th>สถานะ</th>
+                <th>Error</th>
+              </tr>
+            </thead>
+            <tbody>
+              {history.map(item => (
+                <tr key={item.id}>
+                  <td className="text-xs">{item.shared_at || item.created_at}</td>
+                  <td className="text-sm">{item.account_name || '-'}</td>
+                  <td className="text-sm">{item.group_name || '-'}</td>
+                  <td>
+                    {item.status === 'success' && <span className="badge badge-success">✅ สำเร็จ</span>}
+                    {item.status === 'failed' && <span className="badge badge-danger">❌ ล้มเหลว</span>}
+                    {item.status === 'pending' && <span className="badge badge-gray">⏳ รอ</span>}
+                    {item.status === 'sharing' && <span className="badge badge-info">🔄 กำลังแชร์</span>}
+                  </td>
+                  <td className="text-xs text-danger">{item.error_message || ''}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+          {history.length === 0 && (
+            <div className="text-sm text-muted" style={{ textAlign: 'center', padding: '30px' }}>ไม่มีประวัติการแชร์</div>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// === pages/SettingsPage.jsx ===
+function SettingsPage({ api, showToast }) {
+  const [settings, setSettings] = useState({});
+  const [accounts, setAccounts] = useState([]);
+  const [newAccountName, setNewAccountName] = useState('');
+  const [showAddAccount, setShowAddAccount] = useState(false);
+  const [loginLoading, setLoginLoading] = useState(null);
+  const [testingAi, setTestingAi] = useState(false);
+
+  useEffect(() => { loadData(); }, []);
+
+  async function loadData() {
+    const [s, a] = await Promise.all([api.getSettings(), api.getAccounts()]);
+    setSettings(s);
+    setAccounts(a);
+  }
+
+  async function handleSettingChange(key, value) {
+    setSettings(prev => ({ ...prev, [key]: value }));
+    await api.setSetting(key, value);
+  }
+
+  async function handleAddAccount() {
+    if (!newAccountName.trim()) { showToast('กรุณาใส่ชื่อบัญชี', 'error'); return; }
+    await api.addAccount(newAccountName);
+    setNewAccountName('');
+    setShowAddAccount(false);
+    showToast('เพิ่มบัญชีสำเร็จ', 'success');
+    loadData();
+  }
+
+  async function handleDeleteAccount(id) {
+    await api.deleteAccount(id);
+    showToast('ลบบัญชีสำเร็จ', 'success');
+    loadData();
+  }
+
+  async function handleLogin(id) {
+    setLoginLoading(id);
+    try {
+      const result = await api.loginAccount(id);
+      if (result.success) {
+        showToast('Login สำเร็จ!', 'success');
+      } else {
+        showToast(`Login ไม่สำเร็จ: ${result.error}`, 'error');
+      }
+    } catch (err) {
+      showToast(`Error: ${err.message}`, 'error');
+    }
+    setLoginLoading(null);
+    loadData();
+  }
+
+  async function handleTestAi() {
+    setTestingAi(true);
+    try {
+      const result = await api.testAiConnection();
+      if (result.success) {
+        showToast(result.message, 'success');
+      } else {
+        showToast(result.message, 'error');
+      }
+    } catch (err) {
+      showToast(`Error: ${err.message}`, 'error');
+    }
+    setTestingAi(false);
+  }
+
+  return (
+    <div>
+      <h1 className="page-title">⚙️ ตั้งค่า</h1>
+
+      {/* Accounts */}
+      <div className="card">
+        <div className="flex items-center justify-between mb-3">
+          <div className="card-title" style={{ marginBottom: 0 }}>👤 บัญชี Facebook</div>
+          <button className="btn btn-sm btn-primary" onClick={() => setShowAddAccount(true)}>➕ เพิ่มบัญชี</button>
+        </div>
+
+        {showAddAccount && (
+          <div className="flex gap-2 mb-3">
+            <input type="text" className="form-input flex-1" placeholder="ชื่อบัญชี (เช่น บัญชีหลัก)" value={newAccountName} onChange={e => setNewAccountName(e.target.value)} />
+            <button className="btn btn-success" onClick={handleAddAccount}>บันทึก</button>
+            <button className="btn btn-secondary" onClick={() => setShowAddAccount(false)}>ยกเลิก</button>
+          </div>
+        )}
+
+        {accounts.length > 0 ? (
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+            {accounts.map(acc => (
+              <div key={acc.id} className="flex items-center gap-3" style={{ background: '#0f1322', padding: '12px 16px', borderRadius: '10px', border: '1px solid #2d3555' }}>
+                <div className="flex-1">
+                  <div style={{ fontWeight: 600, fontSize: '14px' }}>{acc.name}</div>
+                  <div className="text-xs text-muted">
+                    สถานะ: {acc.status === 'active' ? '🟢 ใช้งานได้' : '🔴 ไม่ได้ใช้'}
+                    {acc.last_used_at && ` • ใช้ล่าสุด: ${acc.last_used_at}`}
+                  </div>
+                  <div className="text-xs text-muted">
+                    {acc.storage_state ? '✅ มี session' : '⚠️ ยังไม่ได้ login'}
+                  </div>
+                </div>
+                <button className="btn btn-sm btn-primary" onClick={() => handleLogin(acc.id)} disabled={loginLoading === acc.id}>
+                  {loginLoading === acc.id ? '⏳...' : '🔑 Login'}
+                </button>
+                <button className="btn btn-sm btn-danger" onClick={() => handleDeleteAccount(acc.id)}>🗑️</button>
+              </div>
+            ))}
+          </div>
+        ) : (
+          <div className="text-sm text-muted" style={{ textAlign: 'center', padding: '20px' }}>ยังไม่มีบัญชี — กด "เพิ่มบัญชี" เพื่อเริ่มต้น</div>
+        )}
+      </div>
+
+      {/* Safety settings */}
+      <div className="card">
+        <div className="card-title">🛡️ ความปลอดภัย</div>
+        <div className="grid-2">
+          <div className="form-group">
+            <label className="form-label">แชร์สูงสุดต่อวัน (ต่อบัญชี)</label>
+            <input type="number" className="form-input" value={settings.max_shares_per_day || 20} onChange={e => handleSettingChange('max_shares_per_day', e.target.value)} />
+          </div>
+          <div className="form-group">
+            <label className="form-label">หน่วงเวลาต่ำสุด (วินาที)</label>
+            <input type="number" className="form-input" value={settings.delay_min || 120} onChange={e => handleSettingChange('delay_min', e.target.value)} />
+          </div>
+          <div className="form-group">
+            <label className="form-label">หน่วงเวลาสูงสุด (วินาที)</label>
+            <input type="number" className="form-input" value={settings.delay_max || 300} onChange={e => handleSettingChange('delay_max', e.target.value)} />
+          </div>
+        </div>
+      </div>
+
+      {/* AI Settings */}
+      <div className="card">
+        <div className="card-title">🤖 AI Caption</div>
+        <div className="grid-2">
+          <div className="form-group">
+            <label className="form-label">Provider</label>
+            <select className="form-select" value={settings.ai_provider || 'none'} onChange={e => handleSettingChange('ai_provider', e.target.value)}>
+              <option value="none">ไม่ใช้</option>
+              <option value="openrouter">OpenRouter</option>
+              <option value="deepseek">DeepSeek</option>
+              <option value="openai">OpenAI</option>
+            </select>
+          </div>
+          <div className="form-group">
+            <label className="form-label">Model</label>
+            <input type="text" className="form-input" value={settings.ai_model || 'deepseek-chat'} onChange={e => handleSettingChange('ai_model', e.target.value)} placeholder="deepseek-chat" />
+          </div>
+        </div>
+        <div className="form-group">
+          <label className="form-label">API Key</label>
+          <input type="password" className="form-input" value={settings.ai_api_key || ''} onChange={e => handleSettingChange('ai_api_key', e.target.value)} placeholder="sk-..." />
+        </div>
+        <button className="btn btn-sm btn-secondary" onClick={handleTestAi} disabled={testingAi || settings.ai_provider === 'none'}>
+          {testingAi ? '⏳ กำลังทดสอบ...' : '🧪 ทดสอบการเชื่อมต่อ'}
+        </button>
+      </div>
+
+      {/* Debug */}
+      <div className="card">
+        <div className="card-title">🔧 Debug</div>
+        <p className="text-sm text-muted mb-3">เปิดโฟลเดอร์ที่เก็บ screenshot + DOM info สำหรับแก้ปัญหา</p>
+        <button className="btn btn-sm btn-secondary" onClick={() => api.openDebugFolder()}>
+          📂 เปิดโฟลเดอร์ Debug
+        </button>
+      </div>
+    </div>
+  );
+}
+
+// === App.jsx ===
+
+// Mock API for when running without Electron
+const mockApi = {
+  getSettings: async () => ({ delay_min: '120', delay_max: '300', max_shares_per_day: '20', ai_provider: 'none', ai_api_key: '', ai_model: 'deepseek-chat', language: 'th' }),
+  setSetting: async () => true,
+  getAccounts: async () => [],
+  addAccount: async (name) => ({ id: Date.now() }),
+  deleteAccount: async () => true,
+  loginAccount: async () => ({ success: false, error: 'ไม่สามารถ login ในโหมดนี้' }),
+  getGroups: async () => [],
+  fetchGroups: async () => ({ success: false, error: 'ไม่สามารถดึงกลุ่มในโหมดนี้' }),
+  searchJoinGroups: async () => ({ success: false, error: 'ไม่สามารถค้นหากลุ่มในโหมดนี้', joinedGroups: [], totalJoined: 0 }),
+  updateGroupCategory: async () => true,
+  updateGroupStatus: async () => true,
+  deleteGroup: async () => true,
+  getCategories: async () => [{ id: 1, name: 'ทั่วไป', color: '#3b82f6' }],
+  addCategory: async () => ({ id: Date.now() }),
+  updateCategory: async () => true,
+  deleteCategory: async () => true,
+  getShareHistory: async () => [],
+  getTodayStats: async () => ({ total: 0, success: 0, failed: 0, pending: 0 }),
+  getWeeklyStats: async () => [],
+  generateCaptions: async () => ['ตัวอย่าง caption 1', 'ตัวอย่าง caption 2', 'ตัวอย่าง caption 3'],
+  testAiConnection: async () => ({ success: false, message: 'ไม่สามารถทดสอบในโหมดนี้' }),
+  startSharing: async () => 'mock-batch',
+  stopSharing: async () => true,
+  getQueueStatus: async () => ({ isRunning: false }),
+  onShareProgress: () => {},
+  onShareComplete: () => {},
+  onShareError: () => {}
+};
+
+const appApi = window.api || mockApi;
+
+function App() {
+  const [currentPage, setCurrentPage] = useState('share');
+  const [toast, setToast] = useState(null);
+  const [shareProgress, setShareProgress] = useState(null);
+  const [isSharing, setIsSharing] = useState(false);
+
+  useEffect(() => {
+    appApi.onShareProgress((data) => {
+      setShareProgress(data);
+    });
+    appApi.onShareComplete((data) => {
+      setIsSharing(false);
+      setShareProgress(null);
+      showToast(`แชร์เสร็จสิ้น! สำเร็จ ${data.successCount}/${data.total}`, 'success');
+    });
+    appApi.onShareError((error) => {
+      setIsSharing(false);
+      showToast(`เกิดข้อผิดพลาด: ${error}`, 'error');
+    });
+  }, []);
+
+  function showToast(message, type = 'success') {
+    setToast({ message, type });
+    setTimeout(() => setToast(null), 4000);
+  }
+
+  function renderPage() {
+    const props = { api: appApi, showToast, shareProgress, isSharing, setIsSharing, setShareProgress };
+    switch (currentPage) {
+      case 'share': return React.createElement(SharePage, props);
+      case 'groups': return React.createElement(GroupsPage, props);
+      case 'report': return React.createElement(ReportPage, props);
+      case 'settings': return React.createElement(SettingsPage, props);
+      default: return React.createElement(SharePage, props);
+    }
+  }
+
+  return (
+    <div className="app-container">
+      <Sidebar currentPage={currentPage} onNavigate={setCurrentPage} />
+      <div className="main-content">
+        {renderPage()}
+      </div>
+      {toast && (
+        <div className={`toast toast-${toast.type}`}>
+          {toast.type === 'success' ? '✅' : '❌'} {toast.message}
+        </div>
+      )}
+    </div>
+  );
+}
+
+// === index.jsx ===
+const root = ReactDOM.createRoot(document.getElementById('root'));
+root.render(React.createElement(App));
+
+  </script>
+</body>
+</html>
