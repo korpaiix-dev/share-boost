@@ -7,7 +7,7 @@ from typing import Optional
 
 class Settings(BaseSettings):
     # ฐานข้อมูล
-    DATABASE_URL: str = "postgresql+asyncpg://postpilot:postpilot@localhost:5432/postpilot"
+    DATABASE_URL: str = "postgresql+asyncpg://postpilot:postpilot123@db:5432/postpilot"
 
     # JWT
     JWT_SECRET: str = "change-me-in-production-please"
@@ -16,14 +16,12 @@ class Settings(BaseSettings):
 
     # Admin account (สร้างอัตโนมัติตอน startup)
     ADMIN_EMAIL: str = "admin@postpilot.ai"
-    ADMIN_PASSWORD: str = "admin1234"
+    ADMIN_PASSWORD: str = "admin123"
 
     # Facebook Graph API
-    FB_APP_ID: str = ""
-    FB_APP_SECRET: str = ""
     FB_API_VERSION: str = "v21.0"
-    FB_REDIRECT_URI: str = "http://139.59.123.146:8000/api/auth/facebook/callback"
-    FRONTEND_URL: str = "http://139.59.123.146:3000"
+    FB_APP_ID: Optional[str] = None
+    FB_APP_SECRET: Optional[str] = None
 
     # OpenRouter AI
     OPENROUTER_API_KEY: Optional[str] = None

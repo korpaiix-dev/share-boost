@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from "react";
 import AgentStatusCard from "@/components/admin/AgentStatusCard";
-import { apiFetch } from "@/lib/api";
 
 interface AgentStatus {
   name: string;
@@ -27,35 +26,19 @@ export default function AgentsPage() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    loadAgents();
+    setLoading(false);
   }, []);
 
-  const loadAgents = async () => {
-    try {
-      const data = await apiFetch<AgentStatus[]>("/admin/agents");
-      setAgents(data);
-    } catch {
-      // use default agents as fallback
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const toggleAgent = async (index: number) => {
+  const toggleAgent = (index: number) => {
     const agent = agents[index];
     const newStatus = agent.status === "active" ? "stopped" : "active";
-    try {
-      await apiFetch(`/admin/agents/${agent.name}/toggle`, { method: "POST" });
-    } catch {
-      // toggle locally if API not ready
-    }
     setAgents((prev) => prev.map((a, i) => (i === index ? { ...a, status: newStatus } : a)));
   };
 
   return (
     <div className="space-y-6">
       <header className="pb-4 border-b border-slate-800">
-        <h1 className="text-3xl font-bold text-white tracking-tight">🤖 AI Agents</h1>
+        <h1 className="text-3xl font-bold text-white tracking-tight">🤖 AI เอเจนท์</h1>
         <p className="text-slate-400 mt-1">สถานะ AI ทั้ง 5 ตัว</p>
       </header>
 

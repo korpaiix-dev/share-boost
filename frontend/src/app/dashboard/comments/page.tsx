@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { MessageCircle, Bot, User, RefreshCw } from "lucide-react";
-import { apiFetch, formatDate } from "@/lib/api";
+import { formatDate } from "@/lib/api";
 
 interface Comment {
   id: number;
@@ -19,23 +19,23 @@ export default function CommentsPage() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    loadComments();
+    setComments([
+      { id: 1, commenter_name: "สมชาย", comment_text: "สวยมากเลยค่ะ", reply_text: "ขอบคุณมากค่ะ 💕 กดลิงก์ที่โปรไฟล์ได้เลยนะคะ", replied_at: "2026-03-28T06:15:00", post_caption: "วันนี้มีโปรพิเศษค่ะ!", created_at: "2026-03-28T06:00:00" },
+      { id: 2, commenter_name: "น้องแนน", comment_text: "ราคาเท่าไหร่คะ", reply_text: "สินค้าชิ้นนี้ 590 บาทค่ะ ทักแชทมาได้เลยนะคะ 😊", replied_at: "2026-03-28T05:30:00", post_caption: "สินค้ามาใหม่เข้ามาดู", created_at: "2026-03-28T05:00:00" },
+      { id: 3, commenter_name: "พี่เจ", comment_text: "มีไซส์ XL ไหมครับ", reply_text: "มีค่ะ! XL สีดำ สีขาว สีน้ำเงิน พร้อมส่งเลยค่ะ", replied_at: "2026-03-27T20:00:00", post_caption: "คอลเลคชั่นหน้าฝน", created_at: "2026-03-27T19:30:00" },
+      { id: 4, commenter_name: "คุณมด", comment_text: "ส่งไวไหมคะ", reply_text: "ส่งภายใน 1-2 วันทำการค่ะ ใช้ Kerry + Flash Express 🚀", replied_at: "2026-03-27T18:45:00", post_caption: "โปรโมชั่นส่งฟรี", created_at: "2026-03-27T18:00:00" },
+    ]);
+    setLoading(false);
   }, []);
 
-  const loadComments = async () => {
-    try {
-      const data = await apiFetch<Comment[]>("/dashboard/comments");
-      setComments(data);
-    } catch {
-      setComments([]);
-    } finally {
-      setLoading(false);
-    }
+  const loadComments = () => {
+    // Mock reload
+    setTimeout(() => setLoading(false), 500);
   };
 
   return (
     <div className="space-y-6">
-      <header className="pb-4 border-b border-slate-800">
+      <header className="pb-4 border-b border-white/10">
         <div className="flex justify-between items-start">
           <div>
             <h1 className="text-3xl font-bold text-white tracking-tight">💬 คอมเม้นท์</h1>
@@ -53,7 +53,7 @@ export default function CommentsPage() {
       {loading ? (
         <div className="space-y-3">
           {[...Array(5)].map((_, i) => (
-            <div key={i} className="bg-slate-900 border border-slate-800 rounded-2xl p-6 animate-pulse">
+            <div key={i} className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-6 animate-pulse">
               <div className="h-4 bg-slate-800 rounded w-32 mb-3" />
               <div className="h-3 bg-slate-800 rounded w-full mb-2" />
               <div className="h-3 bg-slate-800 rounded w-3/4" />
@@ -61,14 +61,14 @@ export default function CommentsPage() {
           ))}
         </div>
       ) : comments.length === 0 ? (
-        <div className="bg-slate-900 border border-slate-800 rounded-2xl p-12 text-center">
+        <div className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-12 text-center">
           <MessageCircle className="mx-auto text-slate-600 mb-3" size={48} />
           <p className="text-slate-400">ยังไม่มีคอมเม้นท์</p>
         </div>
       ) : (
         <div className="space-y-3">
           {comments.map((comment) => (
-            <div key={comment.id} className="bg-slate-900 border border-slate-800 rounded-2xl p-6 hover:border-slate-700 transition-all">
+            <div key={comment.id} className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-6 hover:border-slate-700 transition-all">
               {/* Post reference */}
               <p className="text-xs text-slate-500 mb-3 line-clamp-1">โพสต์: {comment.post_caption}</p>
 

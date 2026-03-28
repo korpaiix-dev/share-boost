@@ -17,7 +17,7 @@ const menuItems = [
   { href: "/admin", label: "แดชบอร์ด", icon: LayoutDashboard },
   { href: "/admin/customers", label: "ลูกค้า", icon: Users },
   { href: "/admin/pages", label: "เพจทั้งหมด", icon: FileText },
-  { href: "/admin/agents", label: "AI Agents", icon: Bot },
+  { href: "/admin/agents", label: "AI เอเจนท์", icon: Bot },
   { href: "/admin/credits", label: "ค่าใช้จ่าย AI", icon: CreditCard },
   { href: "/admin/payments", label: "รายรับ", icon: Receipt },
 ];
@@ -41,7 +41,7 @@ export default function AdminSidebar() {
           </div>
           <div>
             <h1 className="font-bold text-white text-lg">PostPilot</h1>
-            <p className="text-xs text-slate-500">Admin Panel</p>
+            <p className="text-xs text-slate-500">แผงควบคุมแอดมิน</p>
           </div>
         </div>
       </div>

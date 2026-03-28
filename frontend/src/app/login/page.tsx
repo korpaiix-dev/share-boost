@@ -3,6 +3,14 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { LogIn, Eye, EyeOff, Sparkles } from "lucide-react";
+import { apiFetch } from "@/lib/api";
+
+interface LoginResponse {
+  access_token: string;
+  role: string;
+  user_id: number;
+  name: string;
+}
 
 export default function LoginPage() {
   const router = useRouter();
@@ -18,33 +26,51 @@ export default function LoginPage() {
     setError("");
 
     try {
-      const res = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000/api"}/auth/login`,
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ email, password }),
-        }
+      const data = await apiFetch<LoginResponse>("/auth/login", {
+        method: "POST",
+        body: JSON.stringify({ email, password }),
+      });
+
+      // เก็บ token และข้อมูลผู้ใช้ลง localStorage
+      localStorage.setItem("token", data.access_token);
+      localStorage.setItem(
+        "user",
+        JSON.stringify({ id: data.user_id, name: data.name, role: data.role })
       );
 
-      if (!res.ok) {
-        throw new Error("อีเมลหรือรหัสผ่านไม่ถูกต้อง");
-      }
-
-      const data = await res.json();
-      localStorage.setItem("token", data.token);
-      localStorage.setItem("user", JSON.stringify(data.user));
-
-      if (data.user.role === "admin") {
+      // Redirect ตาม role
+      if (data.role === "admin") {
         router.push("/admin");
       } else {
         router.push("/dashboard");
       }
     } catch (err: unknown) {
-      const message = err instanceof Error ? err.message : "เกิดข้อผิดพลาด กรุณาลองอีกครั้ง";
-      setError(message);
+      const message =
+        err instanceof Error ? err.message : "เกิดข้อผิดพลาด กรุณาลองอีกครั้ง";
+      if (message === "API not available") {
+        setError("ไม่สามารถเชื่อมต่อเซิร์ฟเวอร์ได้ กรุณาลองใหม่อีกครั้ง");
+      } else {
+        setError(message);
+      }
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleDemoMode = (role: "admin" | "customer") => {
+    localStorage.setItem("token", "demo-token");
+    localStorage.setItem(
+      "user",
+      JSON.stringify({
+        id: 0,
+        name: role === "admin" ? "Demo Admin" : "Demo Customer",
+        role,
+      })
+    );
+    if (role === "admin") {
+      router.push("/admin");
+    } else {
+      router.push("/dashboard");
     }
   };
 
@@ -56,8 +82,12 @@ export default function LoginPage() {
           <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-indigo-500/10 border border-indigo-500/20 mb-4">
             <Sparkles className="text-indigo-400" size={32} />
           </div>
-          <h1 className="text-3xl font-bold text-white tracking-tight">PostPilot AI</h1>
-          <p className="text-slate-400 mt-2">บริการดูแลเพจ Facebook ด้วย AI ระดับ Premium</p>
+          <h1 className="text-3xl font-bold text-white tracking-tight">
+            PostPilot AI
+          </h1>
+          <p className="text-slate-400 mt-2">
+            บริการดูแลเพจ Facebook ด้วย AI ระดับ Premium
+          </p>
         </div>
 
         {/* Login Form */}
@@ -72,7 +102,9 @@ export default function LoginPage() {
 
           <form onSubmit={handleLogin} className="space-y-4">
             <div>
-              <label className="block text-sm font-medium text-slate-300 mb-2">อีเมล</label>
+              <label className="block text-sm font-medium text-slate-300 mb-2">
+                อีเมล
+              </label>
               <input
                 type="email"
                 value={email}
@@ -84,7 +116,9 @@ export default function LoginPage() {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-slate-300 mb-2">รหัสผ่าน</label>
+              <label className="block text-sm font-medium text-slate-300 mb-2">
+                รหัสผ่าน
+              </label>
               <div className="relative">
                 <input
                   type={showPassword ? "text" : "password"}
@@ -119,10 +153,17 @@ export default function LoginPage() {
               )}
             </button>
           </form>
+
+          {/* Contact */}
+          <div className="mt-6 pt-6 border-t border-slate-800">
+            <p className="text-xs text-slate-400 text-center">
+              ยังไม่มีบัญชี? ติดต่อเราเพื่อเริ่มใช้งาน
+            </p>
+          </div>
         </div>
 
         <p className="text-center text-slate-500 text-xs mt-6">
-          PostPilot AI © 2026 — Premium Facebook Page Management
+          PostPilot AI &copy; 2026 — บริการดูแลเพจ Facebook ด้วย AI
         </p>
       </div>
     </div>

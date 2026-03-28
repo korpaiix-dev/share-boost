@@ -3,7 +3,7 @@ import "./globals.css";
 
 export const metadata: Metadata = {
   title: "PostPilot AI — บริการดูแลเพจ Facebook ด้วย AI",
-  description: "Premium Facebook Page Management Service",
+  description: "บริการดูแลเพจ Facebook ด้วย AI ระดับพรีเมียม",
 };
 
 export default function RootLayout({

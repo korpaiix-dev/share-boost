@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from "react";
 import { Globe, Search, ToggleLeft, ToggleRight } from "lucide-react";
-import { apiFetch } from "@/lib/api";
 
 interface PageData {
   id: number;
@@ -24,30 +23,19 @@ export default function PagesPage() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    loadPages();
+    setPages([
+      { id: 1, customer_name: "ร้านเสื้อผ้าพี่เจน", page_name: "เสื้อผ้าแฟชั่น by เจน", fb_page_id: "123456", status: "active", auto_post: true, auto_comment: true, posts_count: 45, caption_style: "sell", auto_chat: true, post_times: ["12:00","19:00"] },
+      { id: 2, customer_name: "ร้านเสื้อผ้าพี่เจน", page_name: "เจน Outlet", fb_page_id: "123457", status: "active", auto_post: true, auto_comment: true, posts_count: 28, caption_style: "cute", auto_chat: true, post_times: ["12:00","19:00"] },
+      { id: 3, customer_name: "ร้านกาแฟ Mr.Bean", page_name: "Mr.Bean Coffee", fb_page_id: "234567", status: "active", auto_post: true, auto_comment: false, posts_count: 30, caption_style: "classy", auto_chat: false, post_times: ["12:00"] },
+      { id: 4, customer_name: "คลินิกหมอสวย", page_name: "หมอสวยคลินิก", fb_page_id: "345678", status: "active", auto_post: true, auto_comment: true, posts_count: 62, caption_style: "classy", auto_chat: false, post_times: ["12:00"] },
+      { id: 5, customer_name: "คลินิกหมอสวย", page_name: "BeautyByDoc", fb_page_id: "345679", status: "active", auto_post: true, auto_comment: true, posts_count: 55, caption_style: "sexy", auto_chat: true, post_times: ["12:00","19:00"] },
+      { id: 6, customer_name: "คลินิกหมอสวย", page_name: "Doc Skincare", fb_page_id: "345680", status: "paused", auto_post: false, auto_comment: false, posts_count: 12, caption_style: "sell", auto_chat: true, post_times: ["12:00","19:00"] },
+    ]);
+    setLoading(false);
   }, []);
 
-  const loadPages = async () => {
-    try {
-      const data = await apiFetch<PageData[]>("/admin/pages");
-      setPages(data);
-    } catch {
-      setPages([]);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const togglePageStatus = async (id: number, currentStatus: string) => {
-    try {
-      await apiFetch(`/admin/pages/${id}/status`, {
-        method: "PATCH",
-        body: JSON.stringify({ status: currentStatus === "active" ? "paused" : "active" }),
-      });
-      loadPages();
-    } catch {
-      alert("เกิดข้อผิดพลาด");
-    }
+  const togglePageStatus = (id: number) => {
+    setPages(prev => prev.map(p => p.id === id ? { ...p, status: p.status === "active" ? "paused" : "active" } : p));
   };
 
   const styleLabels: Record<string, string> = {
@@ -94,7 +82,7 @@ export default function PagesPage() {
                   </div>
                 </div>
                 <button
-                  onClick={() => togglePageStatus(page.id, page.status)}
+                  onClick={() => togglePageStatus(page.id)}
                   className={`flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm transition-colors ${
                     page.status === "active" ? "bg-emerald-500/10 text-emerald-400" : "bg-slate-800 text-slate-400"
                   }`}

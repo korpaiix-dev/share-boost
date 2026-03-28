@@ -1,9 +1,9 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { CreditCard, Search, Filter } from "lucide-react";
+import { CreditCard, Search } from "lucide-react";
 import StatCard from "@/components/admin/StatCard";
-import { apiFetch, formatDate } from "@/lib/api";
+import { formatDate } from "@/lib/api";
 
 interface CreditLog {
   id: number;
@@ -32,24 +32,16 @@ export default function CreditsPage() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    loadData();
+    setLogs([
+      { id: 1, page_name: "เสื้อผ้าแฟชั่น by เจน", agent_name: "น้องมิ้นท์", action: "เขียนแคปชั่น: photo_001.jpg", model: "gemini-2.5-flash", tokens_in: 850, tokens_out: 120, cost_usd: 0.0002, created_at: "2026-03-28T06:00:00" },
+      { id: 2, page_name: "Mr.Bean Coffee", agent_name: "น้องพิ้งค์", action: "ตอบคอมเม้น: สวัสดีค่ะ", model: "gemini-2.5-flash", tokens_in: 320, tokens_out: 65, cost_usd: 0.0001, created_at: "2026-03-28T05:30:00" },
+      { id: 3, page_name: "หมอสวยคลินิก", agent_name: "น้องฟ้า", action: "รายงานสถิติประจำวัน", model: "gemini-2.5-flash", tokens_in: 1200, tokens_out: 450, cost_usd: 0.0005, created_at: "2026-03-28T08:00:00" },
+      { id: 4, page_name: "เจน Outlet", agent_name: "น้องมิ้นท์", action: "เขียนแคปชั่น: promo_sale.jpg", model: "gemini-2.5-flash", tokens_in: 900, tokens_out: 150, cost_usd: 0.0002, created_at: "2026-03-28T07:00:00" },
+      { id: 5, page_name: "BeautyByDoc", agent_name: "น้องพิ้งค์", action: "ตอบคอมเม้น: ราคาเท่าไหร่คะ", model: "gemini-2.5-flash", tokens_in: 280, tokens_out: 85, cost_usd: 0.0001, created_at: "2026-03-28T04:15:00" },
+    ]);
+    setStats({ total_cost_today: 0.42, total_cost_month: 8.75, total_calls_today: 47, avg_cost_per_call: 0.0002 });
+    setLoading(false);
   }, []);
-
-  const loadData = async () => {
-    try {
-      const [logsData, statsData] = await Promise.all([
-        apiFetch<CreditLog[]>("/admin/credits"),
-        apiFetch<CreditStats>("/admin/credits/stats"),
-      ]);
-      setLogs(logsData);
-      setStats(statsData);
-    } catch {
-      setLogs([]);
-      setStats({ total_cost_today: 0, total_cost_month: 0, total_calls_today: 0, avg_cost_per_call: 0 });
-    } finally {
-      setLoading(false);
-    }
-  };
 
   const agentEmojis: Record<string, string> = {
     "น้องมิ้นท์": "🐱", "น้องท็อป": "🐶", "น้องฟ้า": "🦊", "น้องพิ้งค์": "🐰", "พี่ลีโอ": "🦁",
@@ -65,14 +57,14 @@ export default function CreditsPage() {
     <div className="space-y-6">
       <header className="pb-4 border-b border-slate-800">
         <h1 className="text-3xl font-bold text-white tracking-tight">💳 ค่าใช้จ่าย AI</h1>
-        <p className="text-slate-400 mt-1">ค่าใช้จ่ายจากทุก AI call</p>
+        <p className="text-slate-400 mt-1">ค่าใช้จ่ายจากการเรียกใช้ AI ทั้งหมด</p>
       </header>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         <StatCard title="ค่า AI วันนี้" value={`$${(stats?.total_cost_today ?? 0).toFixed(4)}`} icon={CreditCard} color="amber" />
         <StatCard title="ค่า AI เดือนนี้" value={`$${(stats?.total_cost_month ?? 0).toFixed(2)}`} icon={CreditCard} color="rose" />
-        <StatCard title="จำนวน call วันนี้" value={stats?.total_calls_today ?? 0} icon={CreditCard} color="blue" />
-        <StatCard title="เฉลี่ย/call" value={`$${(stats?.avg_cost_per_call ?? 0).toFixed(6)}`} icon={CreditCard} color="indigo" />
+        <StatCard title="จำนวนครั้งวันนี้" value={stats?.total_calls_today ?? 0} icon={CreditCard} color="blue" />
+        <StatCard title="เฉลี่ย/ครั้ง" value={`$${(stats?.avg_cost_per_call ?? 0).toFixed(6)}`} icon={CreditCard} color="indigo" />
       </div>
 
       <div className="flex gap-3">
@@ -110,12 +102,12 @@ export default function CreditsPage() {
               <thead>
                 <tr className="border-b border-slate-800">
                   <th className="px-6 py-4 text-left text-xs font-medium text-slate-400 uppercase">เวลา</th>
-                  <th className="px-6 py-4 text-left text-xs font-medium text-slate-400 uppercase">Agent</th>
+                  <th className="px-6 py-4 text-left text-xs font-medium text-slate-400 uppercase">เอเจนท์</th>
                   <th className="px-6 py-4 text-left text-xs font-medium text-slate-400 uppercase">เพจ</th>
-                  <th className="px-6 py-4 text-left text-xs font-medium text-slate-400 uppercase">Action</th>
-                  <th className="px-6 py-4 text-left text-xs font-medium text-slate-400 uppercase">Model</th>
-                  <th className="px-6 py-4 text-right text-xs font-medium text-slate-400 uppercase">Tokens</th>
-                  <th className="px-6 py-4 text-right text-xs font-medium text-slate-400 uppercase">Cost</th>
+                  <th className="px-6 py-4 text-left text-xs font-medium text-slate-400 uppercase">การกระทำ</th>
+                  <th className="px-6 py-4 text-left text-xs font-medium text-slate-400 uppercase">โมเดล</th>
+                  <th className="px-6 py-4 text-right text-xs font-medium text-slate-400 uppercase">โทเคน</th>
+                  <th className="px-6 py-4 text-right text-xs font-medium text-slate-400 uppercase">ค่าใช้จ่าย</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-800/50">

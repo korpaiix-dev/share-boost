@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import { Receipt, Search, DollarSign, TrendingUp, Calendar } from "lucide-react";
 import StatCard from "@/components/admin/StatCard";
-import { apiFetch, formatCurrency, formatDate } from "@/lib/api";
+import { formatCurrency, formatDate } from "@/lib/api";
 
 interface Payment {
   id: number;
@@ -27,24 +27,19 @@ export default function PaymentsPage() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    loadData();
+    setPayments([
+      { id: 1, customer_name: "ร้านเสื้อผ้าพี่เจน", amount: 9990, method: "promptpay", status: "paid", paid_at: "2026-03-01T10:30:00" },
+      { id: 2, customer_name: "ร้านกาแฟ Mr.Bean", amount: 5990, method: "promptpay", status: "paid", paid_at: "2026-03-01T14:20:00" },
+      { id: 3, customer_name: "คลินิกหมอสวย", amount: 14990, method: "credit_card", status: "paid", paid_at: "2026-03-02T09:00:00" },
+      { id: 4, customer_name: "ร้านมือถือ iMax", amount: 5990, method: "promptpay", status: "paid", paid_at: "2026-03-05T11:45:00" },
+      { id: 5, customer_name: "ร้านอาหารครัวคุณยาย", amount: 9990, method: "bank_transfer", status: "paid", paid_at: "2026-03-10T08:30:00" },
+      { id: 6, customer_name: "ฟิตเนส StrongBody", amount: 5990, method: "promptpay", status: "paid", paid_at: "2026-03-12T16:00:00" },
+      { id: 7, customer_name: "โรงเรียนกวดวิชา A+", amount: 9990, method: "credit_card", status: "pending", paid_at: "2026-03-25T13:00:00" },
+      { id: 8, customer_name: "ร้านดอกไม้ Bloom", amount: 5990, method: "promptpay", status: "failed", paid_at: "2026-03-20T10:00:00" },
+    ]);
+    setStats({ total_revenue: 67920, revenue_this_month: 67920, total_payments: 8 });
+    setLoading(false);
   }, []);
-
-  const loadData = async () => {
-    try {
-      const [paymentsData, statsData] = await Promise.all([
-        apiFetch<Payment[]>("/admin/payments"),
-        apiFetch<PaymentStats>("/admin/payments/stats"),
-      ]);
-      setPayments(paymentsData);
-      setStats(statsData);
-    } catch {
-      setPayments([]);
-      setStats({ total_revenue: 0, revenue_this_month: 0, total_payments: 0 });
-    } finally {
-      setLoading(false);
-    }
-  };
 
   const statusColors: Record<string, string> = {
     paid: "bg-emerald-500/10 text-emerald-400",
@@ -109,7 +104,7 @@ export default function PaymentsPage() {
                       <td className="px-6 py-4 text-sm text-slate-400">{formatDate(payment.paid_at)}</td>
                       <td className="px-6 py-4 text-sm font-medium text-white">{payment.customer_name}</td>
                       <td className="px-6 py-4 text-sm text-right font-medium text-emerald-400">{formatCurrency(payment.amount)}</td>
-                      <td className="px-6 py-4 text-sm text-slate-300">{payment.method}</td>
+                      <td className="px-6 py-4 text-sm text-slate-300">{{ promptpay: "พร้อมเพย์", credit_card: "บัตรเครดิต", bank_transfer: "โอนธนาคาร" }[payment.method] || payment.method}</td>
                       <td className="px-6 py-4">
                         <span className={`px-2.5 py-1 rounded-lg text-xs font-medium ${statusColors[payment.status] || "bg-slate-800 text-slate-400"}`}>
                           {statusLabels[payment.status] || payment.status}

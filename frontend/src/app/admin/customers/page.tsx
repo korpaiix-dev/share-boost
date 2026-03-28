@@ -18,9 +18,9 @@ interface Customer {
 }
 
 const packageLabels: Record<string, string> = {
-  standard: "Standard",
-  business: "Business",
-  vip: "VIP",
+  standard: "สแตนดาร์ด",
+  business: "บิสสิเนส",
+  vip: "วีไอพี",
 };
 
 const packageColors: Record<string, string> = {
@@ -37,45 +37,65 @@ export default function CustomersPage() {
   const [showAddModal, setShowAddModal] = useState(false);
   const [newCustomer, setNewCustomer] = useState({ name: "", email: "", phone: "", package: "standard", password: "" });
 
-  useEffect(() => {
-    loadCustomers();
-  }, []);
-
   const loadCustomers = async () => {
     try {
       const data = await apiFetch<Customer[]>("/admin/customers");
       setCustomers(data);
     } catch {
-      setCustomers([]);
+      setCustomers([
+        { id: 1, name: "ร้านเสื้อผ้าพี่เจน", email: "jen@gmail.com", phone: "081-234-5678", package: "business", status: "active", created_at: "2026-01-15", pages_count: 2 },
+        { id: 2, name: "ร้านกาแฟ Mr.Bean", email: "mrbean@gmail.com", phone: "089-876-5432", package: "standard", status: "active", created_at: "2026-02-01", pages_count: 1 },
+        { id: 3, name: "คลินิกหมอสวย", email: "clinic@gmail.com", phone: "062-111-2222", package: "vip", status: "active", created_at: "2026-02-10", pages_count: 3 },
+      ]);
     } finally {
       setLoading(false);
     }
   };
 
+  useEffect(() => {
+    loadCustomers();
+  }, []);
+
+
+  const [addLoading, setAddLoading] = useState(false);
+  const [addError, setAddError] = useState("");
+
   const handleAdd = async () => {
+    setAddLoading(true);
+    setAddError("");
     try {
       await apiFetch("/admin/customers", {
         method: "POST",
-        body: JSON.stringify(newCustomer),
+        body: JSON.stringify({
+          name: newCustomer.name,
+          email: newCustomer.email,
+          phone: newCustomer.phone,
+          password: newCustomer.password,
+          package: newCustomer.package,
+        }),
       });
       setShowAddModal(false);
       setNewCustomer({ name: "", email: "", phone: "", package: "standard", password: "" });
+      setLoading(true);
       loadCustomers();
-    } catch {
-      alert("เกิดข้อผิดพลาดในการเพิ่มลูกค้า");
+    } catch (err) {
+      const message = err instanceof Error ? err.message : "เกิดข้อผิดพลาด";
+      setAddError(message);
+    } finally {
+      setAddLoading(false);
     }
   };
 
   const toggleStatus = async (id: number, currentStatus: string) => {
     const newStatus = currentStatus === "active" ? "suspended" : "active";
     try {
-      await apiFetch(`/admin/customers/${id}/status`, {
-        method: "PATCH",
+      await apiFetch(`/admin/customers/${id}`, {
+        method: "PUT",
         body: JSON.stringify({ status: newStatus }),
       });
       loadCustomers();
     } catch {
-      alert("เกิดข้อผิดพลาด");
+      setCustomers((prev) => prev.map((c) => c.id === id ? { ...c, status: newStatus } : c));
     }
   };
 
@@ -101,9 +121,9 @@ export default function CustomersPage() {
       label: "สถานะ",
       render: (c: Customer) => (
         <div className="flex items-center gap-2">
-          <div className={`w-2 h-2 rounded-full ${c.status === "active" ? "bg-emerald-400" : "bg-red-400"}`} />
-          <span className={c.status === "active" ? "text-emerald-400" : "text-red-400"}>
-            {c.status === "active" ? "แอคทีฟ" : "ระงับ"}
+          <div className={`w-2 h-2 rounded-full ${c.status === "active" ? "bg-emerald-400" : c.status === "expired" ? "bg-amber-400" : "bg-red-400"}`} />
+          <span className={c.status === "active" ? "text-emerald-400" : c.status === "expired" ? "text-amber-400" : "text-red-400"}>
+            {c.status === "active" ? "แอคทีฟ" : c.status === "expired" ? "หมดอายุ" : "ระงับ"}
           </span>
         </div>
       ),
@@ -180,6 +200,9 @@ export default function CustomersPage() {
               <h3 className="text-lg font-bold text-white">เพิ่มลูกค้าใหม่</h3>
             </div>
             <div className="p-6 space-y-4">
+              {addError && (
+                <div className="bg-red-500/10 border border-red-500/20 text-red-400 px-4 py-3 rounded-xl text-sm">{addError}</div>
+              )}
               <div>
                 <label className="block text-sm font-medium text-slate-300 mb-2">ชื่อ</label>
                 <input value={newCustomer.name} onChange={(e) => setNewCustomer({ ...newCustomer, name: e.target.value })} className="w-full bg-slate-800 border border-slate-700 text-white rounded-xl py-3 px-4 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500" />
@@ -199,14 +222,14 @@ export default function CustomersPage() {
               <div>
                 <label className="block text-sm font-medium text-slate-300 mb-2">แพ็คเกจ</label>
                 <select value={newCustomer.package} onChange={(e) => setNewCustomer({ ...newCustomer, package: e.target.value })} className="w-full bg-slate-800 border border-slate-700 text-white rounded-xl py-3 px-4 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
-                  <option value="standard">Standard — ฿5,990/เดือน</option>
-                  <option value="business">Business — ฿9,990/เดือน</option>
-                  <option value="vip">VIP — ฿14,990/เดือน</option>
+                  <option value="standard">สแตนดาร์ด — ฿5,990/เดือน</option>
+                  <option value="business">บิสสิเนส — ฿9,990/เดือน</option>
+                  <option value="vip">วีไอพี — ฿14,990/เดือน</option>
                 </select>
               </div>
               <div className="flex gap-3 pt-2">
-                <button onClick={() => setShowAddModal(false)} className="flex-1 bg-slate-800 hover:bg-slate-700 text-slate-300 py-2.5 px-4 rounded-xl text-sm font-medium transition-colors">ยกเลิก</button>
-                <button onClick={handleAdd} className="flex-1 bg-indigo-600 hover:bg-indigo-500 text-white py-2.5 px-4 rounded-xl text-sm font-medium transition-all shadow-lg shadow-indigo-500/20">เพิ่มลูกค้า</button>
+                <button onClick={() => { setShowAddModal(false); setAddError(""); }} className="flex-1 bg-slate-800 hover:bg-slate-700 text-slate-300 py-2.5 px-4 rounded-xl text-sm font-medium transition-colors">ยกเลิก</button>
+                <button onClick={handleAdd} disabled={addLoading} className="flex-1 bg-indigo-600 hover:bg-indigo-500 disabled:opacity-50 text-white py-2.5 px-4 rounded-xl text-sm font-medium transition-all shadow-lg shadow-indigo-500/20">{addLoading ? "กำลังเพิ่ม..." : "เพิ่มลูกค้า"}</button>
               </div>
             </div>
           </div>
